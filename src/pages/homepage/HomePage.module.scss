@@ -1,0 +1,36 @@
+
+
+.homePage {
+    background-color: black;
+    min-height: calc(100vh - 6.3rem);
+   // display: flex;
+   // flex-direction: row;
+   // justify-content:space-between;
+  //  align-items:center;
+  //  padding: 1rem;
+  position: relative;
+
+    &__background{
+        width:100%;
+        height:calc(100vh - 6.5rem);
+    }
+
+
+    &__loginSection
+    {
+        z-index: 1;
+        position:absolute;
+        right:0;
+        top:30vh;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+}
+
+.signup {
+    color:#626293;
+    padding-right: 10.5rem;
+}
+
+
