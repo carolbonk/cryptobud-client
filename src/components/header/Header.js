@@ -13,13 +13,13 @@ export default class Header extends Component {
     return (
       <header className={styles.header}>
       <Link to="/">
-      <img className={styles.logo} width="120px" height="50px" src={Logo}></img>
+      {<img className={styles.logo} width="120px" height="50px" src={Logo}></img>}
       </Link>
       <div className={styles.cryptobud}>
-      <img className={styles.cryptobud} width="120px" height="20px" src={cryptobud}></img>
+      <img width="120px" height="20px" src={cryptobud}></img>
       </div>
       <div className={styles.app_store}>
-      <img className={styles.app_store} width="120px" height="40px" src={App_store}></img>
+      {<img className={styles.app_store} width="120px" height="40px" src={App_store}></img>}
       </div>
       </header>
     );}

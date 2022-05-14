@@ -1,0 +1,18 @@
+@use '../../Styles/Partials/colors' as *;
+@use '../../Styles/Partials/fonts' as *;
+@use '../../Styles/Partials/screenSizes' as *;
+
+.homePage
+{
+    color: $primaryColor;
+    background-color: $backgroundColor;
+    min-height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    &__feed {
+        margin-top:5rem;
+        width:66%;
+    }
+}

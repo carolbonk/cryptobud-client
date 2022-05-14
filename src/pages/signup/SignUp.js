@@ -33,9 +33,9 @@ class Signup extends Component {
 
     render() {
         return (
-            <main className="signup-page">
-                <form className="signup" onSubmit={this.handleSubmit}>
-                    <h1 className="signup__title">Sign up</h1>
+            <main className={styles.signupPage}>
+                <form className={styles.signup} onSubmit={this.handleSubmit}>
+                    <h1 className={styles.signup__title}>Sign up</h1>
 
                     <Input type="text" name="first_name" label="First name" />
                     <Input type="text" name="last_name" label="Last name" />
@@ -44,13 +44,13 @@ class Signup extends Component {
                     <Input type="text" name="email" label="Email" />
                     <Input type="password" name="password" label="Password" />
 
-                    <button className="signup__button">Sign up</button>
+                    <button className={styles.signup__button}>Sign up</button>
 
                     {this.state.success && <div className="signup__message">Signed up!</div>}
                     {this.state.error && <div className="signup__message">{this.state.error}</div>}
                 </form>
                 <p>
-                    Have an account? <Link to="/login">Log in</Link>
+                    Have an account? <Link to="/">Log in</Link>
                 </p>
             </main>
         );
