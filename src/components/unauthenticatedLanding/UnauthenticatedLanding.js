@@ -24,8 +24,8 @@ export default class UnauthenticatedLanding extends Component {
             <div className={styles.landingPage__background} id="background"></div>
             <div className={styles.landingPage__loginSection}>
             <Login />
-            <p className={styles.signup__account}>
-              Need an account? <Link to="/signup">Sign up</Link>
+            <p className={styles.landingPage__account}>
+              Need an account?<Link to="/signup">Sign up!</Link>
             </p>
             </div>
           </main>

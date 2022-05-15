@@ -43,6 +43,7 @@ class Signup extends Component {
                     <Input type="text" name="country" label="Country" />
                     <Input type="text" name="email" label="Email" />
                     <Input type="password" name="password" label="Password" />
+                    <Input type="file" name="avatar" label="Upload avatar" />
 
                     <button className={styles.signup__button}>Sign up</button>
 

@@ -14,6 +14,7 @@ export default class Post extends Component {
          <p>Post {this.props.date}</p>
          <label>{this.props.firstName + " " + this.props.lastName}</label>
          <p>{this.props.message}</p>
+         <p>3 comments</p>
       </div>
     );}
   }
