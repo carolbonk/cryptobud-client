@@ -1,15 +1,36 @@
-@use '../../Styles/Partials/colors' as *;
-@use '../../Styles/Partials/fonts' as *;
-@use '../../Styles/Partials/screenSizes' as *;
+@use './../../Styles/Partials/colors' as *;
+@use './../../Styles/Partials/fonts' as *;
+@use './../../Styles/Partials/screenSizes' as *;
 
-.homePage
-{
-    color: $primaryColor;
+
+.header {
+    padding: 1rem;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cryptobud {
+    padding-top: 1rem;
+    padding-bottom:1rem;
+    padding-left:3rem;
+}
+
+
+
+.homePage {
+    color: $white;
     background-color: $backgroundColor;
     min-height: 100vh;
     display:flex;
     justify-content: center;
     align-items: flex-start;
+
+    &__postWrapper{
+        position: relative;
+        width:100%;
+        height:10rem;
+    }
 
     &__feed {
         margin-top:5rem;

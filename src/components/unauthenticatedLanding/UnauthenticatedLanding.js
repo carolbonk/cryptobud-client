@@ -4,6 +4,7 @@ import styles from "./UnauthenticatedLanding.module.scss";
 import axios from "axios";
 import Login from "../login/Login.js";
 import { Particle } from 'jparticles'
+import Header from "../header/Header.js";
 
 export default class UnauthenticatedLanding extends Component {
 
@@ -20,15 +21,18 @@ export default class UnauthenticatedLanding extends Component {
       
       render() {
         return (
+          <>
+          <Header/>
           <main className={styles.landingPage}>
             <div className={styles.landingPage__background} id="background"></div>
             <div className={styles.landingPage__loginSection}>
-            <Login />
+            <Login onLogIn={this.props.onLogIn}/>
             <p className={styles.landingPage__account}>
               Need an account?<Link to="/signup">Sign up!</Link>
             </p>
             </div>
           </main>
+          </>
         );
       }
 }

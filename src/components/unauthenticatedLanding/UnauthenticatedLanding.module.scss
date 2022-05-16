@@ -3,6 +3,23 @@
 @use '../../Styles/Partials/screenSizes' as *;
 
 
+.header {
+    padding: 1rem;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cryptobud {
+padding-top: 1rem;
+padding-bottom:1rem;
+padding-left:3rem;
+}
+
+.app_store {
+padding-right:1.3rem;
+}
+
 .landingPage {
     background-color: $backgroundColor;
     min-height: calc(100vh - 6.3rem);

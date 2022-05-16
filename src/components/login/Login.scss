@@ -1,3 +1,21 @@
+@use './../../Styles/Partials/colors' as *;
+
+.header {
+    padding: 1rem;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cryptobud {
+    padding-top: 1rem;
+    padding-bottom:1rem;
+    padding-left:3rem;
+}
+
+.app_store {
+    padding-right:1.3rem;
+}
 
 .login {
     display: flex;
@@ -22,15 +40,23 @@
         align-self: center;
     }
 
+    &__buttonContainer {
+        display: flex;
+        flex-direction:row;
+        justify-content:flex-end;
+        width:100%;
+    }
+    
     &__button {
         margin-top: 1rem;
         background-color: #1358db;
-        border: 1px solid #3c67e3;
+        border: 3px solid #3c67e3;
         color: #fff;
         border-radius: 0.5rem;
-        padding: 20px 50px;
+        padding: 0.3rem;
         font-size: inherit;
         cursor: pointer;
+        width:30%;
         transition: background-color 0.15s;
 
         &:hover {
@@ -51,6 +77,8 @@
                 0 0 25px #4e00c2;
             }
         }
+
+      
     }
 
     &__message {

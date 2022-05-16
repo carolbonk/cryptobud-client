@@ -19,7 +19,10 @@ export default class Header extends Component {
       <img width="120px" height="20px" src={cryptobud}></img>
       </div>
       <div className={styles.app_store}>
-      {<img className={styles.app_store} width="120px" height="40px" src={App_store}></img>}
+        {(!!this.props.onLogOut) ? 
+      <button className={styles.header__logOutButton} onClick={this.props.onLogOut}>Log Out</button> :
+      <img className={styles.app_store} width="120px" height="40px" src={App_store}></img>
+       }
       </div>
       </header>
     );}

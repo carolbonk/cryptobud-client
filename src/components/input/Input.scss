@@ -12,5 +12,25 @@
         border-radius: 0.5rem;
         padding: 0.5rem;
         font-size: inherit;
+
+    &__file-selector-button {
+            flex-direction:row;
+            justify-content:flex-end;
+            margin-top:1rem;
+            background-color: #1358db;
+            border: 3px solid #3c67e3;
+            color: #fff;
+            border-radius: 0.5rem;
+            padding: 0.3rem;
+            font-size: inherit;
+            cursor: pointer;
+            transition: background-color 0.15s;
+    
+            &:hover {
+                background-color: #003fc2;
+                animation: pulsate 1s 
+                ease-in-out;
+            }   
+        }
     }
 }

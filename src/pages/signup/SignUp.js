@@ -3,36 +3,59 @@ import {Link, Redirect} from "react-router-dom";
 import styles from './SignUp.module.scss';
 import axios from "axios";
 import Input from "../../components/input/Input";
+import Header from "../../components/header/Header.js";
 
 class Signup extends Component {
     state = {
         error: "",
-        success: false,
+        success: false
     };
 
     handleSubmit = (event) => {
         event.preventDefault();
+        let fileName = event.target.avatar.value;
+        let imageType = fileName.split(".")[1];
+        const fileReader = new FileReader();
+      
+        fileReader.addEventListener("load", () => {   
+        
+        let avatar = fileReader.result; 
 
+        let trimmedAvatar =  avatar.split(",")[1]; 
+       
         axios
-            .post("http://localhost:8080/api/users/register", {
-                email: event.target.email.value,
-                password: event.target.password.value,
-                first_name: event.target.first_name.value,
-                last_name: event.target.last_name.value,
-                city: event.target.city.value,
-                country: event.target.country.value,
-            })
-            .then(() => {
-                this.setState({ success: true, error: "" });
-                event.target.reset();
-            })
-            .catch((error) => {
-                this.setState({ success: false, error: error.response.data });
-            });
+        .post("http://localhost:8080/users/register", {
+            email: event.target.email.value,
+            password: event.target.password.value,
+            first_name: event.target.first_name.value,
+            last_name: event.target.last_name.value,
+            city: event.target.city.value,
+            country: event.target.country.value,
+            avatar: trimmedAvatar,
+            avatar_file_type: imageType
+        })
+        .then(() => {
+            this.setState({ success: true, error: "" });
+        })
+        .catch((error) => {
+            this.setState({ success: false, error: "Error"   });
+        });
+        });
+
+        fileReader.readAsDataURL(event.target.avatar.files[0]);
+
+       
+            
     };
 
     render() {
+
+        if (!this.state.success)
+        {
         return (
+            <>
+             <Header/>
+           
             <main className={styles.signupPage}>
                 <form className={styles.signup} onSubmit={this.handleSubmit}>
                     <h1 className={styles.signup__title}>Sign up</h1>
@@ -54,7 +77,13 @@ class Signup extends Component {
                     Have an account? <Link to="/">Log in</Link>
                 </p>
             </main>
+            </>
         );
+        }
+        else
+        {
+            return <Redirect to="/" />;
+        }
     }
 }
 

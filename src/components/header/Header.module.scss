@@ -4,6 +4,27 @@
     background-color: black;
     display: flex;
     justify-content: space-between;
+
+    &__logOutButton{
+        flex-direction:row;
+        justify-content:flex-end;
+        margin-top:1rem;
+        background-color: #232323;
+        border: 3px solid #0d0d0d;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.3rem;
+        font-size: inherit;
+        cursor: pointer;
+        width:8rem;
+        transition: background-color 0.15s;
+    
+        &:hover {
+            background-color: #4e00c2;
+            animation: pulsate 1s 
+            ease-in-out;
+        }  
+    }
 }
 
 .cryptobud {
@@ -15,3 +36,4 @@ padding-left:3rem;
 .app_store {
 padding-right:1.3rem;
 }
+

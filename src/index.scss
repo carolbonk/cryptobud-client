@@ -1,3 +1,5 @@
+@use "styles/Partials/colors" as *;
+
 *, *:before, *:after {
   box-sizing: border-box;
 }
@@ -9,6 +11,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: $backgroundColor;
 }
 
 code {
