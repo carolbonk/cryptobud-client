@@ -16,7 +16,16 @@ export default class AuthenticatedHomepage extends Component {
     
 
       render() {
-       
+        let posts = null;
+        if (!!this.props.posts)
+        {
+        posts = this.props.posts.map(post => {
+         return(
+          <div key={post.id}  className={styles.homePage__postWrapper}>
+          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} message={post.message} date={post.date}/>
+          </div>
+         )
+       }) }
         return (
 
 
@@ -26,17 +35,7 @@ export default class AuthenticatedHomepage extends Component {
           <main className={styles.homePage}>
             <div className={styles.homePage__feed}> 
            <NewPost  onGlobalToggleChange={this.props.onGlobalToggleChange} globalToggle={this.props.globalToggle} userFirstName={this.props.userFirstName} userLastName={this.props.userLastName} userAvatar={this.props.userAvatar} onMessageChange={this.props.onMessageChange} messageCharCount={this.props.messageCharCount} />   
-           <div className={styles.homePage__postWrapper}>
-           <Post firstName="Victor" lastName="Fry" message="Short message" date="05/13/2022"/>
-           </div>
-           <Comment firstName="Victor" lastName="Fry" message="Short message" date="05/13/2022"/>
-           <Comment firstName="Victor" lastName="Fry2" message="Short message" date="05/13/2022"/>
-           <div className={styles.homePage__postWrapper}>
-           <Post firstName="Victor" lastName="Fry3" message="Short message" date="05/13/2022"/>
-           </div>
-           <div className={styles.homePage__postWrapper}>
-           <Post firstName="Victor" lastName="Fry44" message="Short message" date="05/13/2022"/>
-           </div>
+           {posts}
            </div>
          
           </main>

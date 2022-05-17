@@ -13,7 +13,8 @@ export default class HomePage extends Component {
   state = {
     user: null,
     messageCharCount:0,
-    globalToggle: true
+    globalToggle: true,
+    posts:null
 }
 
 handlePostMessageChange = (event) => {
@@ -45,10 +46,16 @@ handleLogout = () => {
                 }
             })
             .then((response) => {
-                this.setState({
-                    user: response.data
-                });
-            })
+
+            
+              this.setState({
+                user: response.data
+            }, () => {this.getPosts(true)});
+            
+           
+             
+               
+              })  
             .catch(() => {
                 this.setState({
                     failedAuth: true
@@ -69,6 +76,45 @@ handleLogout = () => {
       proximity: 100,
       parallax: true,
     });
+
+    this.getPosts(true);
+    setInterval(() => {this.getPosts(true);}, 30000);
+  }
+
+  getPosts = (setState) => {
+
+    if (!!this.state.user || !setState)
+    {
+    if (!sessionStorage.getItem('token')) {
+      this.setState({ failedAuth: true });
+      return;
+    }
+
+    var config = {
+      method: 'get',
+      url: 'http://localhost:8080/posts',
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+    
+    axios(config)
+    .then((response) => {
+      if (setState)
+      {
+      this.setState({posts: response.data});
+      }
+      else
+      {
+        let data = response.data;
+        return data;
+      }
+    
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
   }
 
   handleToggleChange = () => {
@@ -81,7 +127,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage  onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
     </>
     );
   }
