@@ -15,12 +15,46 @@ export default class HomePage extends Component {
     messageCharCount:0,
     globalToggle: true,
     posts:null
-}
+};
 
 handlePostMessageChange = (event) => {
   this.setState({
     messageCharCount: event.target.value.length});
-}
+};
+
+handlePostMessageSubmit = (event) => {
+  console.log("here 1");
+  event.preventDefault();
+
+  let data = {
+   message: event.target.message.value,
+   global: this.state.globalToggle
+  };
+
+  var config = {
+    method: 'post',
+    url: 'http://localhost:8080/posts',
+    headers: { 
+      'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+    },
+    data : data
+  };
+  
+  console.log("here");
+
+  axios(config)
+  .then((response) => {
+
+    console.log(response);
+    this.getPosts(true);
+
+
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+};
 
 handleLogout = () => {
   sessionStorage.removeItem("token");
@@ -127,7 +161,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage onMessageSubmit={this.handlePostMessageSubmit} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
     </>
     );
   }

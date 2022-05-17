@@ -34,7 +34,7 @@ export default class AuthenticatedHomepage extends Component {
           <Header onLogOut={this.props.onLogOut}/>
           <main className={styles.homePage}>
             <div className={styles.homePage__feed}> 
-           <NewPost  onGlobalToggleChange={this.props.onGlobalToggleChange} globalToggle={this.props.globalToggle} userFirstName={this.props.userFirstName} userLastName={this.props.userLastName} userAvatar={this.props.userAvatar} onMessageChange={this.props.onMessageChange} messageCharCount={this.props.messageCharCount} />   
+           <NewPost  onMessageSubmit={this.props.onMessageSubmit} onGlobalToggleChange={this.props.onGlobalToggleChange} globalToggle={this.props.globalToggle} userFirstName={this.props.userFirstName} userLastName={this.props.userLastName} userAvatar={this.props.userAvatar} onMessageChange={this.props.onMessageChange} messageCharCount={this.props.messageCharCount} />   
            {posts}
            </div>
          
