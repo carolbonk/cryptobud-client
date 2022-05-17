@@ -28,7 +28,6 @@ export default class AuthenticatedHomepage extends Component {
        }) }
         return (
 
-
           <>
         
           <Header onLogOut={this.props.onLogOut}/>

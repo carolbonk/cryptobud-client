@@ -80,8 +80,7 @@ class Signup extends Component {
             </>
         );
         }
-        else
-        {
+        else {
             return <Redirect to="/" />;
         }
     }

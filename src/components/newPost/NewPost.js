@@ -24,14 +24,15 @@ export default class NewPost extends Component {
              <span id="maximum">/300</span>
            </div>
            <div className={styles.newPost__funcContainer}>
-           <button type="submit" className={styles.newPost__button}>Post</button>
            <div className={styles.newPost__toggleBar}>
 
-           <p className={styles.newPost__globalText}>Global</p>
+           <div className={styles.newPost__toggleContainer}>
+           <p className={styles.newPost__globalText}>GLOBAL</p>
            <a onClick={this.props.onGlobalToggleChange} href="#" className={styles.newPost__toggle + " " + (this.props.globalToggle ? styles.newPost__toggleGlobal : styles.newPost__toggleCluster)}></a>
-           <p className={styles.newPost__clusterText}>Cluster only</p>
+           <p className={styles.newPost__clusterText}>CLUSTER ONLY</p>
            </div>
-
+           </div>
+           <button type="submit" className={styles.newPost__postButton}>Post</button>
            </div>
 
            </form>

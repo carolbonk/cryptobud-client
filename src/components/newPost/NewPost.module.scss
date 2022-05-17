@@ -55,55 +55,63 @@
         font-size:0.875rem;
     }
 
-    &__button {
+    &__postButton{
         flex-direction:row;
         justify-content:flex-end;
         margin-top:1rem;
-        background-color: #1358db;
-        border: 3px solid #3c67e3;
+        background-color: #232323;
+        border: 3px solid #0d0d0d;
         color: #fff;
         border-radius: 0.5rem;
         padding: 0.3rem;
         font-size: inherit;
         cursor: pointer;
-        width:10%;
+        width:8rem;
         transition: background-color 0.15s;
-
+    
         &:hover {
-            background-color: #003fc2;
+            background-color: #4e00c2;
             animation: pulsate 1s 
             ease-in-out;
-        }   
-    }
+        }  
+    } 
 
     &__funcContainer {
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
+        }
+    
+    &__toggleContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
     }
 
     &__toggle {
         position: relative;
         display: block;
         margin: 0 auto;
-        width: 100px;
-        height: 40px;
+        width: 70px;
+        height: 30px;
         color:#fff;
         outline: 0;
         text-decoration: none;
+        padding-bottom: .3rem;;
         border-radius: 10%;
-        border: 2px solid #546E7A;
-        background-color: #263238;
+        border: 2px solid #0d0d0d;
+        background-color: #232323;
         transition: all 500ms;
 
         &:active {
         background-color: 
-        darken(#263238, 5%)
+        darken(#0c0c0c, 5%)
         }
 
         &:hover:not(.toggleMoving) {
             &:after {
-                background-color: #455A64;
+                background-color:#37474F; 
+                
             }
         }
 
@@ -119,7 +127,7 @@
             text-transform: uppercase;
             font-size: 1rem;
             color: #fff;
-            background-color: #37474F;
+            background-color: #222222;
             border: 2px solid;
             transition: all 500ms;
         }
@@ -128,14 +136,17 @@
         display: flex;
         align-items: flex-end;
         padding-left: 1rem;
+        padding-top: 0.5rem;
     }
 
     &__globalText{
         margin-right: 0.5rem;
+        font-size: 12px;
     }
 
     &__clusterText{
         margin-left: 0.5rem;
+        font-size: 12px;
     }
 
 
@@ -144,10 +155,11 @@
         &:after {
             content: '';
             border-radius: 50px 5px 5px 50px;
-            color: #003fc2;
+            color: #5ddcff;
             position: absolute;
             left: 0;
-            height:90%;
+            height:80%;
+            top:0.15rem;
         }
     }
 
@@ -155,12 +167,13 @@
         &:after {
             content: '';
             position: absolute;
-            left: 3rem;
-            height:90%;
+            left: 2.2rem;
+            height:80%;
+            top:0.15rem;
             justify-content: flex-start;
-            border-radius: 5px 50px 50px;
+            border-radius: 5px 50px 50px 5px;
             transform: translate (100%, 0);
-            color:red;
+            color:#4e00c2;
         }
     }
     &__toggleMoving {
@@ -170,5 +183,6 @@
         transform 500s, 
         border-radius 500s,
         background-color 500s;
-    }
-}
+        }
+     
+} 
