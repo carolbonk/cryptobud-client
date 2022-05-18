@@ -14,7 +14,9 @@ export default class HomePage extends Component {
     user: null,
     messageCharCount:0,
     globalToggle: true,
-    posts:null
+    posts:[], 
+    lastTopIndex:0,
+    numberOfPosts:0
 };
 
 handlePostMessageChange = (event) => {
@@ -81,11 +83,13 @@ handleLogout = () => {
             })
             .then((response) => {
 
-            
               this.setState({
+                user: response.data});
+              
+              /*this.setState({
                 user: response.data
             }, () => {this.getPosts(true)});
-            
+            */
            
              
                
@@ -111,22 +115,25 @@ handleLogout = () => {
       parallax: true,
     });
 
-    this.getPosts(true);
-    setInterval(() => {this.getPosts(true);}, 30000);
+    //this.getPosts(true);
+    //setInterval(() => {this.getPosts(true);}, 30000);
   }
 
   getPosts = (setState) => {
 
-    if (!!this.state.user || !setState)
+    if (!!this.state.user)
     {
     if (!sessionStorage.getItem('token')) {
       this.setState({ failedAuth: true });
       return;
     }
-
+    
+    let from = this.state.lastTopIndex;
+    let to = from + 10;
+    console.log("from " + from + " to " + to); 
     var config = {
       method: 'get',
-      url: 'http://localhost:8080/posts',
+      url: ('http://localhost:8080/posts?from=' + from + "&to=" + 10),
       headers: { 
         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
       }
@@ -136,13 +143,26 @@ handleLogout = () => {
     .then((response) => {
       if (setState)
       {
-      this.setState({posts: response.data});
+      /*this.setState({posts: response.data.posts,
+                    numberOfPosts:response.data.numberOfPosts,
+                    lastTopIndex: (to + 1)}); */
       }
       else
       {
-        let data = response.data;
-        return data;
+        let currentPosts = this.state.posts;
+        console.log(currentPosts);
+        console.log(response.data.posts);
+         let newPosts = currentPosts.concat(response.data.posts);
+        console.log("new ");
+        console.log(newPosts);
+        //this.state.posts.concat(response.data.posts);
+        let nextLastTopIndex = to + 1;
+        console.log("Number of posts " + response.data.numberOfPosts);
+        this.setState({lastTopIndex: nextLastTopIndex,
+          numberOfPosts: newPosts.length,
+          posts: newPosts});
       }
+
     
     })
     .catch(function (error) {
@@ -161,7 +181,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage onMessageSubmit={this.handlePostMessageSubmit} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage numberOfPosts={this.state.numberOfPosts} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
     </>
     );
   }
