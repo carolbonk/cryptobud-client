@@ -38,9 +38,15 @@ export default class AuthenticatedHomepage extends Component {
 
            <InfiniteScroll
           dataLength={this.props.numberOfPosts}
-          next={() => {this.props.getPosts(false);}}
-          hasMore={true}
+          next={() => {console.log("number of posts in data length: " + this.props.numberOfPosts);
+          this.props.getPosts();}}
+          hasMore={this.props.morePosts}
           loader={<h4>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: 'center' }}>
+              <b>wow, you have seen it all!</b>
+            </p>
+          }
         >
            {posts}
 

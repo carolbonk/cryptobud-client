@@ -16,7 +16,8 @@ export default class HomePage extends Component {
     globalToggle: true,
     posts:[], 
     lastTopIndex:0,
-    numberOfPosts:0
+    numberOfPosts:0,
+    morePosts:true
 };
 
 handlePostMessageChange = (event) => {
@@ -47,8 +48,11 @@ handlePostMessageSubmit = (event) => {
   axios(config)
   .then((response) => {
 
+    event.target.message.value = '';
     console.log(response);
-    this.getPosts(true);
+    this.setState({
+      messageCharCount:0
+    }, this.refreshPosts);
 
 
   })
@@ -61,7 +65,9 @@ handlePostMessageSubmit = (event) => {
 handleLogout = () => {
   sessionStorage.removeItem("token");
   this.setState({
-      user: null
+      user: null,
+      posts:[],
+      lastTopIndex:0
   });
 };
 
@@ -83,13 +89,13 @@ handleLogout = () => {
             })
             .then((response) => {
 
-              this.setState({
-                user: response.data});
+             /* this.setState({
+                user: response.data}); */
               
-              /*this.setState({
+              this.setState({
                 user: response.data
-            }, () => {this.getPosts(true)});
-            */
+            }, () => {this.getPosts()});
+           
            
              
                
@@ -115,11 +121,48 @@ handleLogout = () => {
       parallax: true,
     });
 
-    //this.getPosts(true);
-    //setInterval(() => {this.getPosts(true);}, 30000);
+   
+    setInterval(
+      this.refreshPosts, 5000);
   }
 
-  getPosts = (setState) => {
+
+  refreshPosts = () => {
+
+    if (!!this.state.user)
+    {
+    if (!sessionStorage.getItem('token')) {
+      this.setState({ failedAuth: true });
+      return;
+    }
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/posts?from=0&to=10'),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+    axios(config)
+    .then((response) => {
+      let currentPosts = this.state.posts;
+    
+      let incomingPosts = response.data.posts;
+
+      let postsToAdd = incomingPosts.filter((incomingPost) =>{
+        return !(currentPosts.find((currentPost) => {return (currentPost.id === incomingPost.id);}));
+      });
+
+      let posts = postsToAdd.concat(currentPosts);
+
+      this.setState({lastTopIndex: (this.state.lastTopIndex + postsToAdd.length),
+        posts: posts});
+
+    });
+  }
+  };
+
+  getPosts = () => {
 
     if (!!this.state.user)
     {
@@ -141,27 +184,23 @@ handleLogout = () => {
     
     axios(config)
     .then((response) => {
-      if (setState)
-      {
-      /*this.setState({posts: response.data.posts,
-                    numberOfPosts:response.data.numberOfPosts,
-                    lastTopIndex: (to + 1)}); */
-      }
-      else
-      {
+    
         let currentPosts = this.state.posts;
         console.log(currentPosts);
         console.log(response.data.posts);
          let newPosts = currentPosts.concat(response.data.posts);
         console.log("new ");
         console.log(newPosts);
-        //this.state.posts.concat(response.data.posts);
+        let morePosts = true;
+        if (newPosts.length < currentPosts.length + 10)
+        {
+          morePosts =false;
+        }
         let nextLastTopIndex = to + 1;
-        console.log("Number of posts " + response.data.numberOfPosts);
+        console.log("Number of posts " + newPosts.length);
         this.setState({lastTopIndex: nextLastTopIndex,
-          numberOfPosts: newPosts.length,
-          posts: newPosts});
-      }
+          posts: newPosts,
+        morePosts: morePosts});
 
     
     })
@@ -170,6 +209,11 @@ handleLogout = () => {
     });
   }
   }
+
+  handleRefresh = () =>{
+    console.log("I'm in the refresh");
+   this.getPosts();
+  };
 
   handleToggleChange = () => {
     let currentToggle = this.state.globalToggle;
@@ -181,7 +225,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : <AuthenticatedHomepage numberOfPosts={this.state.numberOfPosts} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage onRefresh={this.handleRefresh} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>) : '')}
     </>
     );
   }
