@@ -14,8 +14,7 @@ export default class AuthenticatedHomepage extends Component {
 
       }
       
-    
-
+      
       render() {
         let posts = null;
         if (!!this.props.posts)

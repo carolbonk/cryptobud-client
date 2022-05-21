@@ -1,6 +1,23 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CryptoBud",
+  "name": "Crypto Bud",
+  "share_target": {
+    "action": "/share-post",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link",
+      "files": [
+        {
+          "name": "posts",
+          "accept": "image/png"
+        }
+      ]
+    }
+  },
+
   "icons": [
     {
       "src": "favicon.ico",

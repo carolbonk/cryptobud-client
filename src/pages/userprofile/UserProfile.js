@@ -120,6 +120,36 @@ handleLogout = () => {
   }
   };
 
+  handleFollow = () => {
+    var config = {
+      method: 'post',
+      url: ('http://localhost:8080/users/' + this.props.match.params.user_id + "/follow"),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+
+    axios(config)
+    .then((response) => {
+      this.getProfile();
+     });
+  };
+
+  handleUnfollow = () => {
+    var config = {
+      method: 'delete',
+      url: ('http://localhost:8080/users/' + this.props.match.params.user_id + "/follow"),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+
+    axios(config)
+    .then((response) => {
+      this.getProfile();
+     });
+  };
+  
   getPosts = () => {
 
     if (!!this.state.user)
@@ -204,6 +234,11 @@ handleLogout = () => {
          <h1>
        {this.state.currentProfile.first_name + " " + this.state.currentProfile.last_name}
        </h1>
+
+       <p>{this.state.currentProfile.city + ", " + this.state.currentProfile.country}</p>
+       <div>
+         {(this.state.currentProfile.id != this.state.user.id) ? (this.state.currentProfile.isFriend? <button onClick={this.handleUnfollow}>Unfollow</button> : <button onClick={this.handleFollow}>Follow</button>) : <h3>Your profile</h3> }
+       </div>
        </div>
 
        <InfiniteScroll

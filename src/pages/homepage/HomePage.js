@@ -69,7 +69,8 @@ handleLogout = () => {
       posts:[],
       lastTopIndex:0
   });
-};
+}; 
+
 
   handleLogInSubmit = (event) => {
     event.preventDefault();
