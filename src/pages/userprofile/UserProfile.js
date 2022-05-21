@@ -132,6 +132,10 @@ handleLogout = () => {
     axios(config)
     .then((response) => {
       this.getProfile();
+      this.setState({
+        posts:[],
+        lastTopIndex:0
+    }, this.getPosts);
      });
   };
 
@@ -147,6 +151,10 @@ handleLogout = () => {
     axios(config)
     .then((response) => {
       this.getProfile();
+      this.setState({
+        posts:[],
+        lastTopIndex:0
+    }, this.getPosts);
      });
   };
   

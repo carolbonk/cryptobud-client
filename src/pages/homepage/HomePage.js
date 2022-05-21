@@ -237,7 +237,9 @@ handleLogout = () => {
    this.getPosts();
   };
 
-  handleToggleChange = () => {
+  handleToggleChange = (event) => {
+    event.preventDefault();
+
     let currentToggle = this.state.globalToggle;
     this.setState({
       globalToggle: (!currentToggle)
