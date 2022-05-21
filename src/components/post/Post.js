@@ -27,7 +27,7 @@ export default class Post extends Component {
   render () {
   let postDate = this.props.date;
     return (
-     <div className={styles.post}>
+     <div className={styles.post + " " + (!!this.props.imageUrl ? styles.postWithImage : styles.postWithOutImage)}>
     <div className={styles.post__foreGroundContent}>
          
     <div className={styles.post__container}>
@@ -43,7 +43,9 @@ export default class Post extends Component {
          <div className={styles.post__msg}>
          <p>{this.props.message}</p>
          </div>
-
+         <div className={styles.post__imgContainer}>
+         {!!this.props.imageUrl ? <img src={this.props.imageUrl} className={styles.post__image}/> : ''}
+         </div>
          <p>3 comments</p>
         
          </div>
@@ -63,7 +65,9 @@ export default class Post extends Component {
          <div className={styles.post__msg}>
          <p>{this.props.message}</p>
          </div>
-
+         <div className={styles.post__imgContainer}>
+         {!!this.props.imageUrl ? <img src={this.props.imageUrl} className={styles.post__image}/> : ''}
+         </div>
          <p>3 comments</p>
 
 

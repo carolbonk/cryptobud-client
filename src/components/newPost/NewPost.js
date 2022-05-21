@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./NewPost.module.scss";
 import axios from "axios";
-
+import Input from "../../components/input/Input";
 
 
 export default class NewPost extends Component {
@@ -23,6 +23,7 @@ export default class NewPost extends Component {
              <span id="current">{this.props.messageCharCount}</span>
              <span id="maximum">/300</span>
            </div>
+           <Input type="file" name="image" label="Upload image" />
            <div className={styles.newPost__funcContainer}>
            <div className={styles.newPost__toggleBar}>
 
@@ -32,6 +33,7 @@ export default class NewPost extends Component {
            <p className={styles.newPost__clusterText}>CLUSTER ONLY</p>
            </div>
            </div>
+        
            <button type="submit" className={styles.newPost__postButton}>Post</button>
            </div>
 

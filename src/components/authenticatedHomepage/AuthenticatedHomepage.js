@@ -14,7 +14,7 @@ export default class AuthenticatedHomepage extends Component {
 
       }
       
-      
+
       render() {
         let posts = null;
         if (!!this.props.posts)
@@ -22,7 +22,7 @@ export default class AuthenticatedHomepage extends Component {
         posts = this.props.posts.map(post => {
          return(
           <div key={post.id}  className={styles.homePage__postWrapper}>
-          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} message={post.message} date={post.date} userId={post.user_id} global={post.global}/>
+          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global}/>
           </div>
          )
        }) }

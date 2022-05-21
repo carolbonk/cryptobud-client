@@ -12,8 +12,8 @@
         border-radius: 0.5rem;
         padding: 0.5rem;
         font-size: inherit;
-
-    &__file-selector-button {
+    }
+    &__input::file-selector-button {
             flex-direction:row;
             justify-content:flex-end;
             margin-top:1rem;
@@ -31,6 +31,6 @@
                 animation: pulsate 1s 
                 ease-in-out;
             }   
-        }
+        
     }
 }

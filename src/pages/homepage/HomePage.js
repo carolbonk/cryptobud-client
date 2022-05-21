@@ -26,14 +26,51 @@ handlePostMessageChange = (event) => {
 };
 
 handlePostMessageSubmit = (event) => {
-  console.log("here 1");
+  
   event.preventDefault();
+  
+  let data = null;
+  let fileName = event.target.image.value;
+  if (!!fileName)
+  {
+  let imageType = fileName.split(".")[1];
+  const fileReader = new FileReader();
 
-  let data = {
-   message: event.target.message.value,
-   global: this.state.globalToggle
-  };
+  fileReader.addEventListener("load", () => {   
+  
+  let image = fileReader.result; 
 
+  let trimmedImage =  image.split(",")[1]; 
+  console.log("loading image");
+  data = {
+    message: event.target.message.value,
+    global: this.state.globalToggle,
+    image: trimmedImage,
+    image_type: imageType
+   };
+   console.log(data.message);
+   this.postMessage(data, event);
+  });
+
+  fileReader.readAsDataURL(event.target.image.files[0]);
+ }
+ else
+ {
+  data = {
+    message: event.target.message.value,
+    global: this.state.globalToggle
+   };
+
+   this.postMessage(data, event);
+ }
+
+
+
+  
+
+};
+
+postMessage = (data, event) => {
   var config = {
     method: 'post',
     url: 'http://localhost:8080/posts',
@@ -43,12 +80,12 @@ handlePostMessageSubmit = (event) => {
     data : data
   };
   
-  console.log("here");
 
   axios(config)
   .then((response) => {
 
     event.target.message.value = '';
+    event.target.image.value = '';
     console.log(response);
     this.setState({
       messageCharCount:0
@@ -59,7 +96,6 @@ handlePostMessageSubmit = (event) => {
   .catch(function (error) {
     console.log(error);
   });
-
 };
 
 handleLogout = () => {
@@ -89,17 +125,11 @@ handleLogout = () => {
                 }
             })
             .then((response) => {
-
-             /* this.setState({
-                user: response.data}); */
               
               this.setState({
                 user: response.data
             }, () => {this.getPosts()});
-           
-           
-             
-               
+                        
               })  
             .catch(() => {
                 this.setState({
