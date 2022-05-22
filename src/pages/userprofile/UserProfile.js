@@ -21,7 +21,8 @@ export default class UserProfile extends Component {
     lastTopIndex:0,
     numberOfPosts:0,
     morePosts:true,
-    currentProfile: null
+    currentProfile: null,
+    chartData: null
 };
 
 
@@ -114,7 +115,18 @@ handleLogout = () => {
       let posts = postsToAdd.concat(currentPosts);
 
       this.setState({lastTopIndex: (this.state.lastTopIndex + postsToAdd.length),
-        posts: posts});
+        posts: posts},
+
+        () => {
+          response.data.posts.forEach(post =>
+          {
+            if (!!post.coin)
+            {
+              this.getChartDataForPost(post.id);
+            }
+          });
+    })
+        
 
     });
   }
@@ -196,17 +208,55 @@ handleLogout = () => {
         console.log("Number of posts " + newPosts.length);
         this.setState({lastTopIndex: nextLastTopIndex,
           posts: newPosts,
-        morePosts: morePosts});
-
-    
-    })
+        morePosts: morePosts},
+        () => {
+          response.data.posts.forEach(post =>
+          {
+            if (!!post.coin)
+            {
+              this.getChartDataForPost(post.id);
+            }
+          });
+    })})
     .catch(function (error) {
       console.log(error);
     });
   }
   }
 
+  getChartDataForPost = (id) => {
+    
+    let posts = this.state.posts;
+    let post = posts.find(post => {return post.id == id});
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/charts/' + post.coin + '/history?' + 'interval=' + 'd1' + '&start=' + (new Date(post.start_date)).getTime() + '&end=' + (new Date(post.end_date)).getTime()),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+ axios(config)
+    .then((response) => {
+   
+      console.log(response);
+      let chartData = response.data.map(dataPoint =>{
+        let date = new Date(dataPoint.date)
+        let chartPoint = {
+          x: (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
+          y: dataPoint.priceUsd
+        }
+        return chartPoint;
+      });  
+
+     post.chartData = chartData;
+     this.setState({posts:posts});
+
+    }) .catch(() => {
+      console.log("error");
+  });
   
+  }
 
   handleToggleChange = () => {
     let currentToggle = this.state.globalToggle;
@@ -223,7 +273,7 @@ handleLogout = () => {
     posts = this.state.posts.map(post => {
      return(
       <div key={post.id}  className={styles.homePage__postWrapper}>
-      <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} message={post.message} date={post.date} global={post.global}/>
+      <Post  key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
       </div>
      )
    }) }

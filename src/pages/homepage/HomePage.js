@@ -88,12 +88,10 @@ handlePostMessageSubmit = (event) => {
   data = {
     message: event.target.message.value,
     global: this.state.globalToggle,
-    coin: event.target.coin.value,
-    start_date: event.target.start_date.value,
-    end_date: event.target.end_date.value,
     coin: this.state.includeChart? event.target.coin.value: '',
-    start_date: this.state.includeChart?  (event.target.start_date.value) : '',
-    end_date:this.state.includeChart?  (event.target.end_date.value) : ''
+    start_date: this.state.includeChart?  new Date(event.target.start_date.value).getTime() : '',
+    end_date:this.state.includeChart?  new Date(event.target.end_date.value).getTime() : ''
+
    };
 
    this.postMessage(data, event);
@@ -118,8 +116,12 @@ postMessage = (data, event) => {
 
     event.target.message.value = '';
     event.target.image.value = '';
+    if( !!event.target.start_date)
+    {
+
     event.target.start_date.value = '';
-    event.target.end_date.value = '';
+    event.target.end_date.value = '';   
+  } 
 
     console.log(response);
     this.setState({
@@ -347,11 +349,18 @@ handleLogout = () => {
       let posts = postsToAdd.concat(currentPosts);
 
       this.setState({lastTopIndex: (this.state.lastTopIndex + postsToAdd.length),
-        posts: posts});
+        posts: posts},  () => {
+          postsToAdd.forEach(post =>
+          {
+            if (!!post.coin)
+            {
+              this.getChartDataForPost(post.id);
+            }
+          }); 
 
     });
-  }
-  };
+  });
+  }};
 
   getPosts = () => {
 
