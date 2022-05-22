@@ -71,8 +71,12 @@ handlePostMessageSubmit = (event) => {
     message: event.target.message.value,
     global: this.state.globalToggle,
     image: trimmedImage,
-    image_type: imageType
+    image_type: imageType,
+    coin: this.state.includeChart? event.target.coin.value: '',
+    start_date: this.state.includeChart?  new Date(event.target.start_date.value).getTime() : '',
+    end_date:this.state.includeChart?  new Date(event.target.end_date.value).getTime() : ''
    };
+
    console.log(data.message);
    this.postMessage(data, event);
   });
@@ -83,7 +87,13 @@ handlePostMessageSubmit = (event) => {
  {
   data = {
     message: event.target.message.value,
-    global: this.state.globalToggle
+    global: this.state.globalToggle,
+    coin: event.target.coin.value,
+    start_date: event.target.start_date.value,
+    end_date: event.target.end_date.value,
+    coin: this.state.includeChart? event.target.coin.value: '',
+    start_date: this.state.includeChart?  (event.target.start_date.value) : '',
+    end_date:this.state.includeChart?  (event.target.end_date.value) : ''
    };
 
    this.postMessage(data, event);
@@ -108,9 +118,13 @@ postMessage = (data, event) => {
 
     event.target.message.value = '';
     event.target.image.value = '';
+    event.target.start_date.value = '';
+    event.target.end_date.value = '';
+
     console.log(response);
     this.setState({
-      messageCharCount:0
+      messageCharCount:0,
+      includeChart:false
     }, this.refreshPosts);
 
 
@@ -202,6 +216,39 @@ handleLogout = () => {
       this.refreshPosts, 5000);
   }
 
+  getChartDataForPost = (id) => {
+    
+    let posts = this.state.posts;
+    let post = posts.find(post => {return post.id == id});
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/charts/' + post.coin + '/history?' + 'interval=' + 'd1' + '&start=' + (new Date(post.start_date)).getTime() + '&end=' + (new Date(post.end_date)).getTime()),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+ axios(config)
+    .then((response) => {
+   
+      console.log(response);
+      let chartData = response.data.map(dataPoint =>{
+        let date = new Date(dataPoint.date)
+        let chartPoint = {
+          x: (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
+          y: dataPoint.priceUsd
+        }
+        return chartPoint;
+      });  
+
+     post.chartData = chartData;
+     this.setState({posts:posts});
+
+    }) .catch(() => {
+      console.log("error");
+  });
+  
+  }
 
   getChartData = (event) => {
     if (!sessionStorage.getItem('token')) {
@@ -344,7 +391,16 @@ handleLogout = () => {
         console.log("Number of posts " + newPosts.length);
         this.setState({lastTopIndex: nextLastTopIndex,
           posts: newPosts,
-        morePosts: morePosts});
+        morePosts: morePosts},
+        () => {
+          response.data.posts.forEach(post =>
+          {
+            if (!!post.coin)
+            {
+              this.getChartDataForPost(post.id);
+            }
+          });
+        });
 
     
     })
@@ -371,7 +427,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage chartData={this.state.chartData} onPreview={this.handlePreviewClick} onRefresh={this.handleRefresh} includeChart={this.state.includeChart}  onIncludeChart={this.handleIncludeChartClick} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} coins={this.state.coinOptions} onLogOut={this.handleLogout}/>) : '')}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage onGetChartData={this.getChartDataForPost}chartData={this.state.chartData} onPreview={this.handlePreviewClick} onRefresh={this.handleRefresh} includeChart={this.state.includeChart}  onIncludeChart={this.handleIncludeChartClick} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} coins={this.state.coinOptions} onLogOut={this.handleLogout}/>) : '')}
     </>
     );
   }

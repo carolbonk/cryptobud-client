@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import styles from './Post.module.scss';
 import axios from "axios";
-
+import {XYPlot, LineSeries, XAxis, YAxis} from 'react-vis';
 
 export default class Post extends Component {
 
@@ -25,9 +25,14 @@ export default class Post extends Component {
  
 
   render () {
+
+   let endDate = new Date(this.props.endDate);
+   let startDate = new Date(this.props.startDate);
+
   let postDate = this.props.date;
     return (
-     <div className={styles.post + " " + (!!this.props.imageUrl ? styles.postWithImage : styles.postWithOutImage)}>
+     <div className={styles.post + " " + ((!!this.props.imageUrl || !!this.props.coin) ? styles.postWithImage : styles.postWithOutImage)}>
+
     <div className={styles.post__foreGroundContent}>
          
     <div className={styles.post__container}>
@@ -45,6 +50,23 @@ export default class Post extends Component {
          </div>
          <div className={styles.post__imgContainer}>
          {!!this.props.imageUrl ? <img src={this.props.imageUrl} className={styles.post__image}/> : ''}
+         {!!this.props.chartData ?   
+        
+        <div className={styles.post__chartContainer} >
+          <div className={styles.post__chartLabel} >
+           <p>{this.props.coin}</p>
+           <p>{'From ' +  (startDate.getMonth() +
+      1) + '/' + startDate.getDate() + '/' + startDate.getFullYear() + ' to ' +  (endDate.getMonth() +
+      1) + '/' + endDate.getDate() + '/' + endDate.getFullYear() }</p>
+         </div>
+           <XYPlot xType='ordinal' height={300} width={500}>
+           <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
+           <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
+           <LineSeries data={this.props.chartData} />
+           </XYPlot> </div>: ''
+           }
          </div>
          <p>3 comments</p>
         
@@ -67,6 +89,24 @@ export default class Post extends Component {
          </div>
          <div className={styles.post__imgContainer}>
          {!!this.props.imageUrl ? <img src={this.props.imageUrl} className={styles.post__image}/> : ''}
+         
+         {!!this.props.chartData ?   
+         <div className={styles.post__chartContainer} >
+            <div className={styles.post__chartLabel} >
+           <p>{this.props.coin}</p>
+           <p>{'From ' +  (startDate.getMonth() +
+      1) + '/' + startDate.getDate() + '/' + startDate.getFullYear() + ' to ' +  (endDate.getMonth() +
+      1) + '/' + endDate.getDate() + '/' + endDate.getFullYear() }</p>
+         </div>
+           <XYPlot xType='ordinal' height={300} width={500}>
+           <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
+           <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
+           <LineSeries data={this.props.chartData} />
+           </XYPlot>  </div> : ''
+          
+           }
          </div>
          <p>3 comments</p>
 

@@ -96,9 +96,25 @@
     top:0;
     left:0;
     width:100%;
-    height: fit-content;
+    height: 100%;
     opacity: 100%;
 }
+
+&__chartLabel {
+display:flex;
+justify-content: space-between;
+
+p {
+    font-size:1rem;
+}
+}
+
+&__chartContainer {
+    // background: #131315;
+    background-color: #000;
+    margin-bottom: 6rem;
+   
+ }
 
 &__foreGroundContent:hover {
     opacity: 0;

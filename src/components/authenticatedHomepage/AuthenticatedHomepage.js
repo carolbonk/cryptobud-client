@@ -88,9 +88,11 @@ const tickerHTML = `
         if (!!this.props.posts)
         {
         posts = this.props.posts.map(post => {
+
+          
          return(
           <div key={post.id}  className={styles.homePage__postWrapper}>
-          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global}/>
+          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
           </div>
          )
        }) }
@@ -108,7 +110,7 @@ const tickerHTML = `
 
           <main className={styles.homePage}>
             <div className={styles.homePage__feed}> 
-           <NewPost onPreview={this.props.onPreview} chartData={this.props.chartData} coins={this.props.coins} onIncludeChart={this.props.onIncludeChart} includeChart={this.props.includeChart} onMessageSubmit={this.props.onMessageSubmit} onGlobalToggleChange={this.props.onGlobalToggleChange} globalToggle={this.props.globalToggle} userFirstName={this.props.userFirstName} userLastName={this.props.userLastName} userAvatar={this.props.userAvatar} onMessageChange={this.props.onMessageChange} messageCharCount={this.props.messageCharCount} />   
+           <NewPost onPreview={this.props.onPreview} chartData={this.props.chartData} coins={this.props.coins} onIncludeChart={this.props.onIncludeChart} includeChart={this.props.includeChart} onMessageSubmit={this.props.onMessageSubmit} onGlobalToggleChange={this.props.onGlobalToggleChange} globalToggle={this.props.globalToggle} userFirstName={this.props.userFirstName} userLastName={this.props.userLastName} userAvatar={this.props.userAvatar} onMessageChange={this.props.onMessageChange} messageCharCount={this.props.messageCharCount}/>   
          
            <InfiniteScroll
           dataLength={this.props.numberOfPosts}
