@@ -55,6 +55,8 @@
         font-size:0.875rem;
     }
 
+    
+
     &__postButton{
         flex-direction:row;
         justify-content:flex-end;
@@ -68,6 +70,8 @@
         cursor: pointer;
         width:8rem;
         transition: background-color 0.15s;
+        margin-left:1rem;
+        margin-right:1rem;
     
         &:hover {
             background-color: #4e00c2;
@@ -75,17 +79,24 @@
             ease-in-out;
         }  
     } 
-
+    &__advancedOptions {
+        display: flex;
+        justify-content: center;
+       
+    }
     &__funcContainer {
         display: flex;
         flex-direction: row;
+        width:100%;
         justify-content: space-between;
         }
     
     &__toggleContainer {
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-around;
+        align-items:center;
+        width:100%;
     }
 
     &__toggle {

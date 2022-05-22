@@ -8,6 +8,7 @@ import { Particle } from 'jparticles'
 import UnauthenticatedLanding from "../../components/unauthenticatedLanding/UnauthenticatedLanding";
 import AuthenticatedHomepage from "../../components/authenticatedHomepage/AuthenticatedHomepage";
 
+
 export default class HomePage extends Component {
   
   state = {
@@ -17,7 +18,22 @@ export default class HomePage extends Component {
     posts:[], 
     lastTopIndex:0,
     numberOfPosts:0,
-    morePosts:true
+    morePosts:true,
+    includeChart:false,
+    coinOptions:null,
+    chartData: null,
+    preview:false
+};
+
+handleIncludeChartClick = (event) => {
+  let currentIncludeChart = this.state.includeChart;
+  this.setState({
+    includeChart: (!currentIncludeChart)});
+
+    if (!currentIncludeChart)
+    {
+   
+    }
 };
 
 handlePostMessageChange = (event) => {
@@ -27,8 +43,17 @@ handlePostMessageChange = (event) => {
 
 handlePostMessageSubmit = (event) => {
   
-  event.preventDefault();
   
+  event.preventDefault();
+  let name = event.target.getAttribute('name');
+  console.log(event.target);
+  if (this.state.preview)
+  {
+   
+    this.getChartData(event);
+  }
+  else
+  {
   let data = null;
   let fileName = event.target.image.value;
   if (!!fileName)
@@ -64,10 +89,7 @@ handlePostMessageSubmit = (event) => {
    this.postMessage(data, event);
  }
 
-
-
-  
-
+  }
 };
 
 postMessage = (data, event) => {
@@ -156,6 +178,8 @@ handleLogout = () => {
               this.setState({
                 user: response.data
             }, () => {this.getPosts()});
+
+            this.getCoins();
            
               })  
             .catch(() => {
@@ -178,6 +202,74 @@ handleLogout = () => {
       this.refreshPosts, 5000);
   }
 
+
+  getChartData = (event) => {
+    if (!sessionStorage.getItem('token')) {
+      this.setState({ failedAuth: true });
+      return;
+    }
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/charts/' + event.target.coin.value + '/history?' + 'interval=' + 'd1' + '&start=' + (new Date(event.target.start_date.value)).getTime() + '&end=' + (new Date(event.target.end_date.value)).getTime()),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+    axios(config)
+    .then((response) => {
+   
+      let chartData = response.data.map(dataPoint =>{
+        let date = new Date(dataPoint.date)
+        let chartPoint = {
+          x: (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear(),
+          y: dataPoint.priceUsd
+        }
+        return chartPoint;
+      });  
+
+      this.setState({chartData: chartData,
+      preview:false});
+      console.log("chart data");
+      console.log(chartData);
+
+    }) .catch(() => {
+      console.log("error");
+  });
+  
+  };
+
+  handlePreviewClick= () => {
+    this.setState({
+      preview:true});
+  }
+
+  getCoins = () => {
+
+   
+    if (!sessionStorage.getItem('token')) {
+      this.setState({ failedAuth: true });
+      return;
+    }
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/charts/coins'),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+    axios(config)
+    .then((response) => {
+    
+
+      this.setState({coinOptions: response.data});
+      console.log(response.data);
+    }) .catch(() => {
+      console.log("error");
+  });
+  
+  };
 
   refreshPosts = () => {
 
@@ -279,7 +371,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage onRefresh={this.handleRefresh} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} onLogOut={this.handleLogout}/>) : '')}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage chartData={this.state.chartData} onPreview={this.handlePreviewClick} onRefresh={this.handleRefresh} includeChart={this.state.includeChart}  onIncludeChart={this.handleIncludeChartClick} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} coins={this.state.coinOptions} onLogOut={this.handleLogout}/>) : '')}
     </>
     );
   }

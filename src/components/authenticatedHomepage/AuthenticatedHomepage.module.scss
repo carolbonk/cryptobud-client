@@ -24,6 +24,9 @@
     justify-content: center;
     align-items: flex-start;
 
+    &__tickerWrapper{
+        height: 3rem;
+    }
     &__postWrapper{
         position: relative;
         width:100%;
@@ -39,4 +42,7 @@
     }
 }
 
+.script__container {
+    background-color: $backgroundColor;
+}
 
