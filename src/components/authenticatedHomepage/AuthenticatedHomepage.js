@@ -19,13 +19,55 @@ scriptAdded = false;
     if (!this.scriptAdded)
     {
       setTimeout(() => {
+        if (!!document.getElementById("tradingView"))
+        {
+          return;
+        }
         const script = document.createElement("script");
-
+        script.id = "tradingView"
         script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
         script.async = true;
-    
-        document.body.appendChild(script);
+        script.innerHTML = `
+        {
+          "symbols": [
+            {
+              "proName": "BITSTAMP:BTCUSD",
+              "title": "Bitcoin"
+            },
+            {
+              "proName": "BITSTAMP:ETHUSD",
+              "title": "Ethereum"
+            },
+            {
+              "description": "Tether",
+              "proName": "COINBASE:USDTUSD"
+            },
+            {
+              "description": "BNB",
+              "proName": "BINANCE:BNBUSD"
+            },
+            {
+              "description": "Cardano",
+              "proName": "COINBASE:ADAUSD"
+            },
+            {
+              "description": "Dogecoin",
+              "proName": "COINBASE:DOGEUSD"
+            }
+          ],
+          "showSymbolLogo": true,
+          "colorTheme": "dark",
+          "isTransparent": true,
+          "displayMode": "adaptive",
+          "locale": "en"
+        }
+        `;
+
+
+        let wrapper = document.getElementById('tickerWrapper');
+        wrapper.appendChild(script);
         this.scriptAdded = true;
+        console.log("added script");
       }, 1000);
     
    
@@ -46,41 +88,7 @@ const tickerHTML = `
 <div class="tradingview-widget-container">
   <div class="tradingview-widget-container__widget"></div>
   <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener" target="_blank"><span class="blue-text">Markets</span></a> by TradingView</div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-  {
-  "symbols": [
-    {
-      "proName": "BITSTAMP:BTCUSD",
-      "title": "Bitcoin"
-    },
-    {
-      "proName": "BITSTAMP:ETHUSD",
-      "title": "Ethereum"
-    },
-    {
-      "description": "Tether",
-      "proName": "COINBASE:USDTUSD"
-    },
-    {
-      "description": "BNB",
-      "proName": "BINANCE:BNBUSD"
-    },
-    {
-      "description": "Cardano",
-      "proName": "COINBASE:ADAUSD"
-    },
-    {
-      "description": "Dogecoin",
-      "proName": "COINBASE:DOGEUSD"
-    }
-  ],
-  "showSymbolLogo": true,
-  "colorTheme": "dark",
-  "isTransparent": true,
-  "displayMode": "adaptive",
-  "locale": "en"
-}
-  </script>
+
 </div>
 <!-- TradingView Widget END -->
 `;
@@ -92,7 +100,7 @@ const tickerHTML = `
           
          return(
           <div key={post.id}  className={styles.homePage__postWrapper}>
-          <Post key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
+          <Post key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
           </div>
          )
        }) }
@@ -101,11 +109,9 @@ const tickerHTML = `
           <>
         
           <Header onLogOut={this.props.onLogOut}/>
-          {parse(tickerHTML)}
-        <div className={styles.homepage__tickerWrapper}>
-          {
-     
-        } 
+    
+        <div id="tickerWrapper" className={styles.homepage__tickerWrapper}>
+        {parse(tickerHTML)}
         </div>
 
           <main className={styles.homePage}>

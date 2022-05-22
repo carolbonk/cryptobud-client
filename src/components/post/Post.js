@@ -68,8 +68,10 @@ export default class Post extends Component {
            </XYPlot> </div>: ''
            }
          </div>
+
+         <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
          <p>3 comments</p>
-        
+        </Link>
          </div>
     <div className={styles.post__backgroundContent}>
         

@@ -5,6 +5,7 @@ import Header from "./components/header/Header.js";
 import SignUp from "./pages/signup/SignUp.js";
 import UserProfile from "./pages/userprofile/UserProfile.js";
 import HomePage from "./pages/homepage/HomePage.js";
+import Comments from "./pages/comments/Comments.js";
 import Footer from "./components/footer/Footer.js";
 
 
@@ -19,6 +20,7 @@ export default class App extends Component {
           <Route path="/" exact component={HomePage} />      
           <Route path="/signup" component={SignUp} />  
           <Route path="/user/:user_id" component={UserProfile} /> 
+          <Route path="/post/:post_id/comments" component={Comments} /> 
           </Switch>
         </BrowserRouter>
      
