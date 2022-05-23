@@ -21,7 +21,7 @@ export default class Header extends Component {
   
       <div className={styles.githublogo}>
         {(!!this.props.onLogOut) ? 
-        <Link to="/"><button className={styles.header__logOutButton} onClick={this.props.onLogOut}>Log Out</button> </Link>: 
+        <Link to="/"><button className={styles.logOutButton} onClick={this.props.onLogOut}>Log Out</button> </Link>: 
       (<a href="https://github.com/carolbonk">
       <img className={styles.githublogo} width="80px" height="60px" src={githublogo}></img></a>)}
       </div>

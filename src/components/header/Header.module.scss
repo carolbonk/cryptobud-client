@@ -1,3 +1,5 @@
+@use './../../Styles/Partials/colors' as *;
+@use './../../Styles/Partials/screenSizes' as *;
 
 .header {
     padding: 1rem;
@@ -5,7 +7,14 @@
     display: flex;
     justify-content: space-between;
 
-    &__logOutButton{
+    @include mobile {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}
+
+    .logOutButton {
         flex-direction:row;
         justify-content:flex-end;
         margin-top:1rem;
@@ -18,14 +27,22 @@
         cursor: pointer;
         width:8rem;
         transition: background-color 0.15s;
-    
+        
+        @include mobile {
+
+            flex-direction:row;
+            justify-content: center;
+            background-color: black;
+            border: black;
+        }
+
         &:hover {
             background-color: #4e00c2;
             animation: pulsate 1s 
             ease-in-out;
         }  
     }
-}
+
 
 .cryptobud {
 padding-top: 1rem;

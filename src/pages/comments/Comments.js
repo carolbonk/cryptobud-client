@@ -139,7 +139,8 @@ export default class Comments extends Component {
             date: firstComment.postDate,
             coin: firstComment.postCoin,
             start_date: firstComment.postStartDate,
-            end_date: firstComment.postEndDate
+            end_date: firstComment.postEndDate,
+            user_id: firstComment.postUserId,
           }
             
             this.setState({
@@ -173,7 +174,7 @@ export default class Comments extends Component {
         let commentDisplays = comments.map(comment => {
             if (!!comment.id)
             {
-            return (<Comment key={comment.id} id={comment.id} message={comment.message} date={comment.date} firstName={comment.first_name} lastName={comment.last_name} avatar={comment.avatar_url}/>);
+            return (<Comment key={comment.id} id={comment.id} message={comment.message} date={comment.date} firstName={comment.first_name} lastName={comment.last_name} userId={comment.user_id} avatar={comment.avatar_url}/>);
             }
             else
             return '';

@@ -39,16 +39,16 @@ export default class NewPost extends Component {
           {(!!this.props.includeChart) ? 
           (<div>
             <h3>Chart Options</h3>
-          <label>Coin</label>
-          <select name="coin">{coinOptions}</select>
-          <label>Time interval: daily average</label>
+          <label>COIN</label>
+          <select name="coin" className={styles.newPost__select}>{coinOptions}</select>
+          <label><p>Time interval: daily average</p></label>
        
            <div>
    
            <Input label="Start Date" name="start_date" type="date"/>
            
            <Input label="End date" name="end_date" type="date"/>
-           <button onClick={this.props.onPreview} name="preview">Preview</button>
+           <button className={styles.newPost__previewButton} onClick={this.props.onPreview} name="preview">Preview</button>
 
             {!!this.props.chartData ?   
            <XYPlot xType='ordinal' height={300} width={500}>

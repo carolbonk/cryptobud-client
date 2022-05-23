@@ -273,7 +273,7 @@ handleLogout = () => {
     posts = this.state.posts.map(post => {
      return(
       <div key={post.id}  className={styles.homePage__postWrapper}>
-      <Post  key={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
+      <Post  key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
       </div>
      )
    }) }

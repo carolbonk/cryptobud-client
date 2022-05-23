@@ -22,12 +22,14 @@
     min-height: 100vh;
     display:flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width:100%;
 
-    &__tickerWrapper{
+    &__tickerWrapper {
         height: 3rem;
     }
-    &__postWrapper{
+    &__postWrapper {
         position: relative;
         width:100%;
        
@@ -36,9 +38,20 @@
 
     &__feed {
         margin-top:5rem;
-        width:66%;
+        width:90%;
         padding-bottom: 7rem;
         margin-bottom: 7rem;
+
+        @include mobile {
+            width: 100%;
+            }
+        @include tablet {
+        width: 100%;
+        }
+
+        @include desktop {
+            width: 75%;
+            }
     }
 }
 

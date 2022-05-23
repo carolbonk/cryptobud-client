@@ -31,7 +31,7 @@ export default class Post extends Component {
 
   let postDate = this.props.date;
     return (
-     <div className={styles.post + " " + ((!!this.props.imageUrl || !!this.props.coin) ? styles.postWithImage : styles.postWithOutImage)}>
+     <div className={styles.post + " " + ((!!this.props.imageUrl || !!this.props.coin) ? (this.props.imageUrl? styles.postWithImage : styles.postWithChart) : styles.postWithOutImage)}>
 
     <div className={styles.post__foreGroundContent}>
          
@@ -59,19 +59,31 @@ export default class Post extends Component {
       1) + '/' + startDate.getDate() + '/' + startDate.getFullYear() + ' to ' +  (endDate.getMonth() +
       1) + '/' + endDate.getDate() + '/' + endDate.getFullYear() }</p>
          </div>
-           <XYPlot xType='ordinal' height={300} width={500}>
+         <div className={styles.post__largeChart}>
+           <XYPlot xType='ordinal' height={500} width={700}>
            <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
            <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
            <LineSeries data={this.props.chartData} />
-           </XYPlot> </div>: ''
+           </XYPlot>  </div>
+           
+           <div className={styles.post__smallChart}>
+           <XYPlot xType='ordinal' height={200} width={300}>
+           <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
+           <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
+           <LineSeries data={this.props.chartData} />
+           </XYPlot>  </div>
+           
+           </div>: ''
            }
          </div>
 
           {!!this.props.hideComments? '' :  
           <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
-         <p>View comments</p>
+         <p className={styles.post__viewComments}>View comments</p>
         </Link>} 
         
          </div>
@@ -102,20 +114,36 @@ export default class Post extends Component {
       1) + '/' + startDate.getDate() + '/' + startDate.getFullYear() + ' to ' +  (endDate.getMonth() +
       1) + '/' + endDate.getDate() + '/' + endDate.getFullYear() }</p>
          </div>
+         <div className={styles.post__largeChart}>
            <XYPlot xType='ordinal' height={300} width={500}>
            <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
            <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
            <LineSeries data={this.props.chartData} />
-           </XYPlot>  </div> : ''
+           </XYPlot>  </div>
+           
+           <div className={styles.post__smallChart}>
+           <XYPlot xType='ordinal' height={150} width={250}>
+           <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
+           <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
+          text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'10px'}}}/>
+           <LineSeries data={this.props.chartData} />
+           </XYPlot>  </div>
+           
+           </div> : ''
           
            }
          </div>
 
+        
          {!!this.props.hideComments? '' :  
-         <p>View comments</p>
+          <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
+         <p className={styles.post__viewComments}>View comments</p>
+         </Link>
           } 
+         
 
         </div>
       </div>
