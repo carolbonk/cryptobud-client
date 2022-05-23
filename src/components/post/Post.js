@@ -69,9 +69,11 @@ export default class Post extends Component {
            }
          </div>
 
-         <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
-         <p>3 comments</p>
-        </Link>
+          {!!this.props.hideComments? '' :  
+          <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
+         <p>View comments</p>
+        </Link>} 
+        
          </div>
     <div className={styles.post__backgroundContent}>
         
@@ -110,8 +112,10 @@ export default class Post extends Component {
           
            }
          </div>
-         <p>3 comments</p>
 
+         {!!this.props.hideComments? '' :  
+         <p>View comments</p>
+          } 
 
         </div>
       </div>
