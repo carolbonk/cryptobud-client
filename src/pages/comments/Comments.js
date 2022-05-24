@@ -42,7 +42,131 @@ export default class Comments extends Component {
             lastTopIndex:0
         });
       };
+      handleDump = (id, requiresDelete) => {
+  
+        if (requiresDelete)
+        {
+          var config = {
+            method: 'delete',
+            url: ('http://localhost:8080/posts/' + id + '/likes'),
+            headers: { 
+              'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            }
+          };
+       axios(config)
+          .then((response) => {
+            this.addLike(id, "dump");
+          }) .catch(() => {
+            console.log("error");
+        });
+        }
+        else
+        {
+          this.addLike(id, "dump");
+        }
+      }
+    
+      handleHodl = (id, requiresDelete) => {
+    
+    
+        if (requiresDelete)
+        {
+          var config = {
+            method: 'delete',
+            url: ('http://localhost:8080/posts/' + id + '/likes'),
+            headers: { 
+              'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            }
+          };
+       axios(config)
+          .then((response) => {
+            this.addLike(id, "hodl");
+          }) .catch(() => {
+            console.log("error");
+        });
+        }
+        else
+        {
+          this.addLike(id, "hodl");
+        }
+        
+      }
+    
+      addLike = (id, type) => {
+        let data = 
+        {
+          type: type
+        }
+         var config = {
+           method: 'post',
+           url: ('http://localhost:8080/posts/' + id + '/likes'),
+           headers: { 
+             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+           },
+           data : data
+         };
+      axios(config)
+         .then((response) => {
+    
+           this.getLikesDataForPost(id);
+         }) .catch(() => {
+           console.log("error");
+       });
+      }
+    
+      deleteLike = (id) => {
+         var config = {
+           method: 'delete',
+           url: ('http://localhost:8080/posts/' + id + '/likes'),
+           headers: { 
+             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+           }
+         };
+      axios(config)
+         .then((response) => {
+           this.getLikesDataForPost(id);
+         }) .catch(() => {
+           console.log("error");
+       });
+      }
+    
+      handleUnDump = (id) => {
+       this.deleteLike(id);
+      }
+      handleUnHodl = (id) => {
+        this.deleteLike(id);
+      }
+      getLikesDataForPost = (id) => {
+        
+        let post = this.state.post;
+    
+        var config = {
+          method: 'get',
+          url: ('http://localhost:8080/posts/' + id + '/likes'),
+          headers: { 
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+          }
+        };
+     axios(config)
+        .then((response) => {
+       
+        
+         post.hodlCounter = response.data.hodlCounter;
+         post.dumpCounter = response.data.dumpCounter;
+         post.userHasInteracted = response.data.userHasInteracted;
+         post.userLikeType = response.data.userLikeType;
+    
+         this.setState({post:post}, () =>{
+          if (!!post.coin)
+          {
+            this.getChartDataForPost(post.id);
+          }});
+    
+        }) .catch(() => {
+          console.log("error");
+      });
       
+      }
       getChartDataForPost = (id) => {
     
         let post = this.state.post;
@@ -149,10 +273,9 @@ export default class Comments extends Component {
               },
             () => {
               
-                if (!!post.coin)
-                { 
-                  this.getChartDataForPost(post.id);
-                }
+                
+                  this.getLikesDataForPost(post.id);
+                
         })
     }
         else
@@ -186,7 +309,7 @@ export default class Comments extends Component {
     {!!this.state.post ?
     (
         <div className={styles.comments}>
-    <Post  key={this.state.post.id} avatar={this.state.post.avatar_url} firstName={this.state.post.first_name} lastName={this.state.post.last_name} imageUrl={this.state.post.image_url}  message={this.state.post.message} date={this.state.post.date} userId={this.state.post.user_id} global={this.state.post.global} coin={this.state.post.coin} startDate={this.state.post.start_date} endDate={this.state.post.end_date} chartData={this.state.post.chartData} hideComments={true}/>
+    <Post  key={this.state.post.id} Id={this.state.post.id} avatar={this.state.post.avatar_url} firstName={this.state.post.first_name} lastName={this.state.post.last_name} imageUrl={this.state.post.image_url}  message={this.state.post.message} date={this.state.post.date} userId={this.state.post.user_id} global={this.state.post.global} coin={this.state.post.coin} startDate={this.state.post.start_date} endDate={this.state.post.end_date} chartData={this.state.post.chartData} hideComments={true} hodlCounter={this.state.post.hodlCounter} dumpCounter={this.state.post.dumpCounter} userHasInteracted={this.state.post.userHasInteracted} userLikeType={this.state.post.userLikeType} onDump={this.handleDump} onHodl={this.handleHodl} onUnHodl={this.handleUnHodl} onUnDump={this.handleUnDump}/>
     <h3>Comments</h3>
     {commentDisplays}
     <div>

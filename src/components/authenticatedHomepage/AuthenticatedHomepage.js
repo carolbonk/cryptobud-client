@@ -100,7 +100,7 @@ const tickerHTML = `
           
          return(
           <div key={post.id}  className={styles.homePage__postWrapper}>
-          <Post key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
+          <Post key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData} hodlCounter={post.hodlCounter} dumpCounter={post.dumpCounter} userHasInteracted={post.userHasInteracted} userLikeType={post.userLikeType} onDump={this.props.onDump} onHodl={this.props.onHodl} onUnHodl={this.props.onUnHodl} onUnDump={this.props.onUnDump} />
           </div>
          )
        }) }

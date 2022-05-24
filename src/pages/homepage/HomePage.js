@@ -252,6 +252,133 @@ handleLogout = () => {
   
   }
 
+  handleDump = (id, requiresDelete) => {
+  
+    if (requiresDelete)
+    {
+      var config = {
+        method: 'delete',
+        url: ('http://localhost:8080/posts/' + id + '/likes'),
+        headers: { 
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        }
+      };
+   axios(config)
+      .then((response) => {
+        this.addLike(id, "dump");
+      }) .catch(() => {
+        console.log("error");
+    });
+    }
+    else
+    {
+      this.addLike(id, "dump");
+    }
+  }
+
+  handleHodl = (id, requiresDelete) => {
+
+
+    if (requiresDelete)
+    {
+      var config = {
+        method: 'delete',
+        url: ('http://localhost:8080/posts/' + id + '/likes'),
+        headers: { 
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        }
+      };
+   axios(config)
+      .then((response) => {
+        this.addLike(id, "hodl");
+      }) .catch(() => {
+        console.log("error");
+    });
+    }
+    else
+    {
+      this.addLike(id, "hodl");
+    }
+    
+  }
+
+  addLike = (id, type) => {
+    let data = 
+    {
+      type: type
+    }
+     var config = {
+       method: 'post',
+       url: ('http://localhost:8080/posts/' + id + '/likes'),
+       headers: { 
+         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+       },
+       data : data
+     };
+  axios(config)
+     .then((response) => {
+
+       this.getLikesDataForPost(id);
+     }) .catch(() => {
+       console.log("error");
+   });
+  }
+
+  deleteLike = (id) => {
+     var config = {
+       method: 'delete',
+       url: ('http://localhost:8080/posts/' + id + '/likes'),
+       headers: { 
+         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+       }
+     };
+  axios(config)
+     .then((response) => {
+       this.getLikesDataForPost(id);
+     }) .catch(() => {
+       console.log("error");
+   });
+  }
+
+  handleUnDump = (id) => {
+   this.deleteLike(id);
+  }
+  handleUnHodl = (id) => {
+    this.deleteLike(id);
+  }
+  getLikesDataForPost = (id) => {
+    
+    let posts = this.state.posts;
+    let post = posts.find(post => {return post.id == id});
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/posts/' + id + '/likes'),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+ axios(config)
+    .then((response) => {
+   
+    
+     post.hodlCounter = response.data.hodlCounter;
+     post.dumpCounter = response.data.dumpCounter;
+     post.userHasInteracted = response.data.userHasInteracted;
+     post.userLikeType = response.data.userLikeType;
+
+     this.setState({posts:posts}, () =>{
+      if (!!post.coin)
+      {
+        this.getChartDataForPost(post.id);
+      }});
+
+    }) .catch(() => {
+      console.log("error");
+  });
+  
+  }
+
   getChartData = (event) => {
     if (!sessionStorage.getItem('token')) {
       this.setState({ failedAuth: true });
@@ -352,10 +479,9 @@ handleLogout = () => {
         posts: posts},  () => {
           postsToAdd.forEach(post =>
           {
-            if (!!post.coin)
-            {
-              this.getChartDataForPost(post.id);
-            }
+            this.getLikesDataForPost(post.id);
+         
+
           }); 
 
     });
@@ -404,10 +530,7 @@ handleLogout = () => {
         () => {
           response.data.posts.forEach(post =>
           {
-            if (!!post.coin)
-            {
-              this.getChartDataForPost(post.id);
-            }
+            this.getLikesDataForPost(post.id);
           });
         });
 
@@ -436,7 +559,7 @@ handleLogout = () => {
   render() {
     return (
       <>
-    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage onGetChartData={this.getChartDataForPost}chartData={this.state.chartData} onPreview={this.handlePreviewClick} onRefresh={this.handleRefresh} includeChart={this.state.includeChart}  onIncludeChart={this.handleIncludeChartClick} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} coins={this.state.coinOptions} onLogOut={this.handleLogout}/>) : '')}
+    { !this.state.user ? <UnauthenticatedLanding onLogIn={this.handleLogInSubmit}/> : (this.state.posts.length != 0 ? (<AuthenticatedHomepage onDump={this.handleDump} onHodl={this.handleHodl} onUnHodl={this.handleUnHodl} onUnDump={this.handleUnDump} onGetChartData={this.getChartDataForPost}chartData={this.state.chartData} onPreview={this.handlePreviewClick} onRefresh={this.handleRefresh} includeChart={this.state.includeChart}  onIncludeChart={this.handleIncludeChartClick} numberOfPosts={this.state.posts.length} getPosts={this.getPosts} onMessageSubmit={this.handlePostMessageSubmit} morePosts={this.state.morePosts} posts={this.state.posts} onGlobalToggleChange={this.handleToggleChange} globalToggle={this.state.globalToggle} onMessageChange={this.handlePostMessageChange} messageCharCount={this.state.messageCharCount} userFirstName={this.state.user.first_name} userLastName={this.state.user.last_name} userAvatar={this.state.user.avatar_url} coins={this.state.coinOptions} onLogOut={this.handleLogout}/>) : '')}
     </>
     );
   }

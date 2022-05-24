@@ -86,6 +86,133 @@ handleLogout = () => {
  
   }
 
+  handleDump = (id, requiresDelete) => {
+  
+    if (requiresDelete)
+    {
+      var config = {
+        method: 'delete',
+        url: ('http://localhost:8080/posts/' + id + '/likes'),
+        headers: { 
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        }
+      };
+   axios(config)
+      .then((response) => {
+        this.addLike(id, "dump");
+      }) .catch(() => {
+        console.log("error");
+    });
+    }
+    else
+    {
+      this.addLike(id, "dump");
+    }
+  }
+
+  handleHodl = (id, requiresDelete) => {
+
+
+    if (requiresDelete)
+    {
+      var config = {
+        method: 'delete',
+        url: ('http://localhost:8080/posts/' + id + '/likes'),
+        headers: { 
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        }
+      };
+   axios(config)
+      .then((response) => {
+        this.addLike(id, "hodl");
+      }) .catch(() => {
+        console.log("error");
+    });
+    }
+    else
+    {
+      this.addLike(id, "hodl");
+    }
+    
+  }
+
+  addLike = (id, type) => {
+    let data = 
+    {
+      type: type
+    }
+     var config = {
+       method: 'post',
+       url: ('http://localhost:8080/posts/' + id + '/likes'),
+       headers: { 
+         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+       },
+       data : data
+     };
+  axios(config)
+     .then((response) => {
+
+       this.getLikesDataForPost(id);
+     }) .catch(() => {
+       console.log("error");
+   });
+  }
+
+  deleteLike = (id) => {
+     var config = {
+       method: 'delete',
+       url: ('http://localhost:8080/posts/' + id + '/likes'),
+       headers: { 
+         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+       }
+     };
+  axios(config)
+     .then((response) => {
+       this.getLikesDataForPost(id);
+     }) .catch(() => {
+       console.log("error");
+   });
+  }
+
+  handleUnDump = (id) => {
+   this.deleteLike(id);
+  }
+  handleUnHodl = (id) => {
+    this.deleteLike(id);
+  }
+  getLikesDataForPost = (id) => {
+    
+    let posts = this.state.posts;
+    let post = posts.find(post => {return post.id == id});
+
+    var config = {
+      method: 'get',
+      url: ('http://localhost:8080/posts/' + id + '/likes'),
+      headers: { 
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      }
+    };
+ axios(config)
+    .then((response) => {
+   
+    
+     post.hodlCounter = response.data.hodlCounter;
+     post.dumpCounter = response.data.dumpCounter;
+     post.userHasInteracted = response.data.userHasInteracted;
+     post.userLikeType = response.data.userLikeType;
+
+     this.setState({posts:posts}, () =>{
+      if (!!post.coin)
+      {
+        this.getChartDataForPost(post.id);
+      }});
+
+    }) .catch(() => {
+      console.log("error");
+  });
+  
+  }
+
   refreshPosts = () => {
 
     if (!!this.state.user)
@@ -120,10 +247,7 @@ handleLogout = () => {
         () => {
           response.data.posts.forEach(post =>
           {
-            if (!!post.coin)
-            {
-              this.getChartDataForPost(post.id);
-            }
+            this.getLikesDataForPost(post.id);
           });
     })
         
@@ -212,10 +336,7 @@ handleLogout = () => {
         () => {
           response.data.posts.forEach(post =>
           {
-            if (!!post.coin)
-            {
-              this.getChartDataForPost(post.id);
-            }
+           this.getLikesDataForPost(post.id);
           });
     })})
     .catch(function (error) {
@@ -273,7 +394,7 @@ handleLogout = () => {
     posts = this.state.posts.map(post => {
      return(
       <div key={post.id}  className={styles.homePage__postWrapper}>
-      <Post  key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData}/>
+      <Post  key={post.id} Id={post.id} avatar={post.avatar_url} firstName={post.first_name} lastName={post.last_name} imageUrl={post.image_url}  message={post.message} date={post.date} userId={post.user_id} global={post.global} coin={post.coin} startDate={post.start_date} endDate={post.end_date} chartData={post.chartData} hodlCounter={post.hodlCounter} dumpCounter={post.dumpCounter} userHasInteracted={post.userHasInteracted} userLikeType={post.userLikeType} onDump={this.handleDump} onHodl={this.handleHodl} onUnHodl={this.handleUnHodl} onUnDump={this.handleUnDump} />
       </div>
      )
    }) }

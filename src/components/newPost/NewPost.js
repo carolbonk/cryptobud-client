@@ -10,7 +10,6 @@ export default class NewPost extends Component {
 
   componentDidMount(){
 
-
    }
       
       render() {
@@ -35,6 +34,7 @@ export default class NewPost extends Component {
              <span id="current">{this.props.messageCharCount}</span>
              <span id="maximum">/300</span>
            </div>
+
           <div className={styles.newPost__advancedOptions}>
           {(!!this.props.includeChart) ? 
           (<div>
@@ -43,7 +43,7 @@ export default class NewPost extends Component {
           <select name="coin" className={styles.newPost__select}>{coinOptions}</select>
           <label><p>Time interval: daily average</p></label>
        
-           <div>
+
    
            <Input label="Start Date" name="start_date" type="date"/>
            
@@ -59,35 +59,30 @@ export default class NewPost extends Component {
            <LineSeries data={this.props.chartData} />
            </XYPlot> : ''
            }
-           </div>
-           </div>
+           </div> 
+
           ): ''}
            </div>
            <div className={styles.newPost__funcContainer}>
-
-           <Input type="file" name="image" label="Upload image" />
-           <div className={styles.newPost__toggleBar}>
-
-           
+           <div className={styles.newPost__upload}>
+           <Input type="file" name="image" label="Upload image" width="40px"/>
+           </div>
            <div className={styles.newPost__toggleContainer}>
-        
-           
-           
-           <button type="button" onClick={this.props.onIncludeChart} className={styles.newPost__postButton}>{!this.props.includeChart ? 'Include chart' : 'Exclude chart'}</button>
-         
+             <div className={styles.newPost__toggleBar}>
            <p className={styles.newPost__globalText}>GLOBAL</p>
            <a onClick={this.props.onGlobalToggleChange} href="#" className={styles.newPost__toggle + " " + (this.props.globalToggle ? styles.newPost__toggleGlobal : styles.newPost__toggleCluster)}></a>
            <p className={styles.newPost__clusterText}>CLUSTER ONLY</p>
-
+           </div>
+           </div>
+           </div>
+           <div className={styles.newPost__buttonOptions}>
+          
+           <button type="button" onClick={this.props.onIncludeChart} className={styles.newPost__postButton}>{!this.props.includeChart ? 'Include chart' : 'Exclude chart'}</button>
+     
+           
+           
            <button type="submit" className={styles.newPost__postButton}>Post</button>
           
-          
-           </div>
-
-             
-         
-           </div>
-        
            </div>
 
            </form>

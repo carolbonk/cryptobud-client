@@ -4,15 +4,24 @@
 .header {
     padding: 1rem;
     background-color: black;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-auto-flow: column;
+    width: 95%;
 
-    @include mobile {
-        flex-direction: column;
-        justify-content: flex-start;
+
+    @include tablet {
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
     }
-}
+
+    @include desktop {
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .logOutButton {
         flex-direction:row;
@@ -41,16 +50,17 @@
             animation: pulsate 1s 
             ease-in-out;
         }  
+    
+
+
+    .cryptobud {
+    padding-top: 1rem;
+    padding-bottom:1rem;
+    padding-left:3rem;
     }
 
-
-.cryptobud {
-padding-top: 1rem;
-padding-bottom:1rem;
-padding-left:3rem;
+    .githublogo {
+    padding-right:1.3rem;
+    }
+    }
 }
-
-.githublogo {
-padding-right:1.3rem;
-}
-

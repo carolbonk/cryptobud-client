@@ -26,28 +26,25 @@
     }
 
     &__smallChart {
-            
-      
         @include desktop {
             display:none;
         }
+
+        @include tablet {
+            display:none;
+        }
     }
+
     &__largeChart {
-
-    @include mobile {
+        @include mobile {
         display:none;   
-    }
-
-    @include tablet {
-        display:none;
     }
   }
     
     &__name {
-
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
     }
 
     &__viewComments {
@@ -80,6 +77,9 @@
 
     &__global {
         padding-left:1rem;
+        padding-top: 1.3rem;
+        font-style: italic;
+        font-size: 0.7rem;
     }
 
     &__user {
@@ -125,10 +125,10 @@
 }
 
 &__chartLabel {
-display:flex;
-justify-content: space-between;
-padding: .5rem;
-font-size: 0.5rem;
+    display:flex;
+    justify-content: space-between;
+    padding: .5rem;
+    font-size: 0.5rem;
 
 p {
     font-size:0.8rem;
@@ -163,15 +163,30 @@ p {
 }
 
 .postWithImage {
-    height:42rem;
+   
+
+        height:46rem;
+ 
 }
 
 .postWithOutImage {
-    height:11rem;
+ 
+        height:20rem;
+   
 }
 
 .postWithChart {
-    height:52rem;
+    @include desktop {
+        height:54rem;
+    }
+
+    @include tablet {
+        height:35rem;
+    }
+
+    @include mobile {
+        height:35rem;
+    }
 }
 
 

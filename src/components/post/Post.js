@@ -48,6 +48,7 @@ export default class Post extends Component {
          <div className={styles.post__msg}>
          <p>{this.props.message}</p>
          </div>
+
          <div className={styles.post__imgContainer}>
          {!!this.props.imageUrl ? <img src={this.props.imageUrl} className={styles.post__image}/> : ''}
          {!!this.props.chartData ?   
@@ -80,7 +81,22 @@ export default class Post extends Component {
            </div>: ''
            }
          </div>
+           {! this.props.userHasInteracted ? 
+           <div>
+           <button onClick={() => {this.props.onDump(this.props.Id, false)}}>Dump</button>
+           <button onClick={() => {this.props.onHodl(this.props.Id, false)}}>Hodl</button> </div>: 
+           (this.props.userLikeType == 'hodl' ? 
+           <div>
+           <button onClick={() => {this.props.onDump(this.props.Id, true)}}> Dump</button>
+           <button onClick={() => {this.props.onUnHodl(this.props.Id)}}>Unhodl</button> </div>
+           :
+           <div>
+           <button onClick={() => {this.props.onUnDump(this.props.Id)}}>Undump</button>
+           <button onClick={() => {this.props.onHodl(this.props.Id, true)}}>Hodl</button> </div>
+           )
+            }
 
+           <div>{this.props.hodlCounter + ' HODLs ' + this.props.dumpCounter + ' DUMPs'}</div>
           {!!this.props.hideComments? '' :  
           <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
          <p className={styles.post__viewComments}>View comments</p>
@@ -96,7 +112,7 @@ export default class Post extends Component {
          <Link className={styles.post__userLink} to={"/user/" + this.props.userId}>
          <label className={styles.post__name}>{this.props.firstName + " " + this.props.lastName}</label>
          </Link>
-         <div className={styles.post__global}>{this.props.global? 'Global': ' Cluster only'}</div>
+         <div className={styles.post__global}>{this.props.global? '• GLOBAL': ' • CLUSTER ONLY'}</div>
          </div>
          <p className={styles.post__date}>{this.getDateString(postDate)}</p>
          </div>
@@ -115,7 +131,7 @@ export default class Post extends Component {
       1) + '/' + endDate.getDate() + '/' + endDate.getFullYear() }</p>
          </div>
          <div className={styles.post__largeChart}>
-           <XYPlot xType='ordinal' height={300} width={500}>
+           <XYPlot xType='ordinal' height={500} width={700}>
            <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
            <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
@@ -124,7 +140,7 @@ export default class Post extends Component {
            </XYPlot>  </div>
            
            <div className={styles.post__smallChart}>
-           <XYPlot xType='ordinal' height={150} width={250}>
+           <XYPlot xType='ordinal' height={200} width={300}>
            <XAxis  title="Time" tickLabelAngle={90} tickFormat={v => v}  style={{ticks: {stroke: '#000'},
           text:  { stroke: 'none', fill: '#6b6b76', fontWeight: 800, fontSize:'6px'}}}/>
            <YAxis left={20}  title="Value (USD)" hideLine tickFormat={v => "$" + v} style={{ticks: {stroke: '#FFF'},
@@ -137,7 +153,21 @@ export default class Post extends Component {
            }
          </div>
 
-        
+         {! this.props.userHasInteracted ? 
+           <div>
+           <button>Dump</button>
+           <button>Hodl</button> </div>: 
+           (this.props.userLikeType == 'hodl' ? 
+           <div>
+           <button>Dump</button>
+           <button>Unhodl</button> </div>
+           :
+           <div>
+           <button>Undump</button>
+           <button>Hodl</button> </div>
+           )
+            }
+          <div>{this.props.hodlCounter + ' HODLs ' + this.props.dumpCounter + ' DUMPs'}</div>
          {!!this.props.hideComments? '' :  
           <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
          <p className={styles.post__viewComments}>View comments</p>
