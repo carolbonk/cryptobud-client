@@ -29,10 +29,10 @@ export default class NewPost extends Component {
             <p>Hey {this.props.userFirstName}, What's up?</p>
             </div>
             <form className={styles.newPost__form} onSubmit={this.props.onMessageSubmit}>
-           <textarea name="message" onChange={this.props.onMessageChange} maxLength="300" placeholder="Start Typing..." className={styles.newPost__message}></textarea>
+           <textarea name="message" onChange={this.props.onMessageChange} maxLength="255" placeholder="Start Typing..." className={styles.newPost__message}></textarea>
            <div className={styles.newPost__commentCount}>
              <span id="current">{this.props.messageCharCount}</span>
-             <span id="maximum">/300</span>
+             <span id="maximum">/255</span>
            </div>
 
           <div className={styles.newPost__advancedOptions}>

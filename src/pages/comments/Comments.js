@@ -315,7 +315,7 @@ export default class Comments extends Component {
     <div>
     <form className={styles.comments__newMessageContainer} onSubmit={this.handlePostComment}>
     <h3>What do you think?</h3>
-    <textarea name="message" maxLength="300" placeholder="Start Typing..." className={styles.comments__message}></textarea>
+    <textarea name="message" maxLength="255" placeholder="Start Typing..." className={styles.comments__message}></textarea>
     <button className={styles.comments__postButton}>Add comment</button>
     </form>
     </div>

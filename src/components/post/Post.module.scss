@@ -61,6 +61,25 @@
         width:60px;
     }
 
+    &__msg {
+
+        min-height:8rem;
+       p { 
+        word-wrap: break-word;
+        
+        @include desktop {
+            max-width:35rem;
+        }
+    
+        @include tablet {
+            max-width:30rem;
+        }
+    
+        @include mobile {
+            max-width:18rem;
+        }
+       }
+    }
     &__image {
         margin-right:1rem;
         margin-left:1rem;
@@ -108,6 +127,14 @@
         display: flex;
         justify-content: center;
         padding-bottom: 1rem;
+    }
+
+    &__likeOptions {
+        display:flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        padding-left:1rem;
+        padding-right:1rem;
     }
 
 &__foreGroundContent {
@@ -177,15 +204,15 @@ p {
 
 .postWithChart {
     @include desktop {
-        height:54rem;
+        height:60rem;
     }
 
     @include tablet {
-        height:35rem;
+        height:60rem;
     }
 
     @include mobile {
-        height:35rem;
+        height:37rem;
     }
 }
 

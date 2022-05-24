@@ -81,6 +81,8 @@ export default class Post extends Component {
            </div>: ''
            }
          </div>
+
+         <div className={styles.post__likeOptions}>
            {! this.props.userHasInteracted ? 
            <div>
            <button onClick={() => {this.props.onDump(this.props.Id, false)}}>Dump</button>
@@ -96,7 +98,9 @@ export default class Post extends Component {
            )
             }
 
-           <div>{this.props.hodlCounter + ' HODLs ' + this.props.dumpCounter + ' DUMPs'}</div>
+           <div>{this.props.dumpCounter + ' DUMPs ' + this.props.hodlCounter + ' HODLs '}</div>
+
+           </div>
           {!!this.props.hideComments? '' :  
           <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
          <p className={styles.post__viewComments}>View comments</p>
@@ -153,6 +157,7 @@ export default class Post extends Component {
            }
          </div>
 
+       <div className={styles.post__likeOptions}>
          {! this.props.userHasInteracted ? 
            <div>
            <button>Dump</button>
@@ -167,7 +172,9 @@ export default class Post extends Component {
            <button>Hodl</button> </div>
            )
             }
-          <div>{this.props.hodlCounter + ' HODLs ' + this.props.dumpCounter + ' DUMPs'}</div>
+          <div>{this.props.dumpCounter + ' DUMPs ' + this.props.hodlCounter + ' HODLs '}</div>
+          </div>
+
          {!!this.props.hideComments? '' :  
           <Link className={styles.post__userLink} to={"/post/" + this.props.Id + "/comments"}> 
          <p className={styles.post__viewComments}>View comments</p>
