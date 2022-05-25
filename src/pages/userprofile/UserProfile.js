@@ -458,9 +458,9 @@ export default class UserProfile extends Component {
                 <div>
                   {this.state.currentProfile.id != this.state.user.id ? (
                     this.state.currentProfile.isFriend ? (
-                      <button onClick={this.handleUnfollow}>Unfollow</button>
+                      <button className={styles.homePage__followButton} onClick={this.handleUnfollow}>Unfollow</button>
                     ) : (
-                      <button onClick={this.handleFollow}>Follow</button>
+                      <button className={styles.homePage__followButton} onClick={this.handleFollow}>Follow</button>
                     )
                   ) : (
                     <h3>Your profile</h3>

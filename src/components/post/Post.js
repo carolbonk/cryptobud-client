@@ -163,14 +163,14 @@ export default class Post extends Component {
           <div className={styles.post__likeOptions}>
             {!this.props.userHasInteracted ? (
               <div>
-                <button
+                <button className={styles.post__dumpButton}
                   onClick={() => {
                     this.props.onDump(this.props.Id, false);
                   }}
                 >
                   Dump
                 </button>
-                <button
+                <button className={styles.post__hodlButton}
                   onClick={() => {
                     this.props.onHodl(this.props.Id, false);
                   }}
@@ -180,7 +180,7 @@ export default class Post extends Component {
               </div>
             ) : this.props.userLikeType == "hodl" ? (
               <div>
-                <button
+                <button className={styles.post__dumpButton}
                   onClick={() => {
                     this.props.onDump(this.props.Id, true);
                   }}
@@ -188,7 +188,7 @@ export default class Post extends Component {
                   {" "}
                   Dump
                 </button>
-                <button
+                <button className={styles.post__hodlButton}
                   onClick={() => {
                     this.props.onUnHodl(this.props.Id);
                   }}
@@ -198,14 +198,14 @@ export default class Post extends Component {
               </div>
             ) : (
               <div>
-                <button
+                <button className={styles.post__dumpButton}
                   onClick={() => {
                     this.props.onUnDump(this.props.Id);
                   }}
                 >
                   Undump
                 </button>
-                <button
+                <button className={styles.post__hodlButton}
                   onClick={() => {
                     this.props.onHodl(this.props.Id, true);
                   }}
@@ -216,10 +216,10 @@ export default class Post extends Component {
             )}
 
             <div>
-              {this.props.dumpCounter +
-                " DUMPs " +
-                this.props.hodlCounter +
-                " HODLs "}
+            <span className={styles.post__colorDump}>{this.props.dumpCounter +
+                " DUMPs "} </span>
+               <span className={styles.post__colorHodl}>{this.props.hodlCounter +
+                " HODLs "}</span> 
             </div>
           </div>
           {!!this.props.hideComments ? (
@@ -361,27 +361,66 @@ export default class Post extends Component {
           <div className={styles.post__likeOptions}>
             {!this.props.userHasInteracted ? (
               <div>
-                <button>Dump</button>
-                <button>Hodl</button>{" "}
+                <button className={styles.post__dumpButton}
+                  onClick={() => {
+                    this.props.onDump(this.props.Id, false);
+                  }}
+                >
+                  Dump
+                </button>
+                <button className={styles.post__hodlButton}
+                  onClick={() => {
+                    this.props.onHodl(this.props.Id, false);
+                  }}
+                >
+                  Hodl
+                </button>{" "}
               </div>
             ) : this.props.userLikeType == "hodl" ? (
               <div>
-                <button>Dump</button>
-                <button>Unhodl</button>{" "}
+                <button className={styles.post__dumpButton}
+                  onClick={() => {
+                    this.props.onDump(this.props.Id, true);
+                  }}
+                >
+                  {" "}
+                  Dump
+                </button>
+                <button className={styles.post__hodlButton}
+                  onClick={() => {
+                    this.props.onUnHodl(this.props.Id);
+                  }}
+                >
+                  Unhodl
+                </button>{" "}
               </div>
             ) : (
               <div>
-                <button>Undump</button>
-                <button>Hodl</button>{" "}
+                <button className={styles.post__dumpButton}
+                  onClick={() => {
+                    this.props.onUnDump(this.props.Id);
+                  }}
+                >
+                  Undump
+                </button>
+                <button className={styles.post__hodlButton}
+                  onClick={() => {
+                    this.props.onHodl(this.props.Id, true);
+                  }}
+                >
+                  Hodl
+                </button>{" "}
               </div>
             )}
+
             <div>
-              {this.props.dumpCounter +
-                " DUMPs " +
-                this.props.hodlCounter +
-                " HODLs "}
+            <span className={styles.post__colorDump}>{this.props.dumpCounter +
+                " DUMPs "} </span>
+               <span className={styles.post__colorHodl}>{this.props.hodlCounter +
+                " HODLs "}</span> 
             </div>
           </div>
+    
 
           {!!this.props.hideComments ? (
             ""

@@ -18,8 +18,7 @@
     padding-top:0.5rem;
 
   
-    &__userLink {
-            
+    &__userLink {     
         text-decoration: none;
         color: white;
         padding-top: 1rem;  
@@ -137,6 +136,82 @@
         padding-right:1rem;
     }
 
+    &__hodlButton {
+        background-color: #232323;
+        border: 3px solid #0d0d0d;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.3rem;
+        font-size: inherit;
+        cursor: pointer;
+        width:8rem;
+        transition: background-color 0.15s;
+        margin-left:1rem;
+        margin-right:1rem;
+    
+        &:hover {
+            background-color: #4e00c2;
+            animation: pulsate 1s 
+            ease-in-out;
+        } 
+    }
+
+    &__dumpButton {
+        background-color: #ff4f4b;
+        border: 3px solid #ff6865;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.15rem;
+        font-size: inherit;
+        cursor: pointer;
+        width:5rem;
+        transition: background-color 0.15s;
+        margin-left:.5rem;
+        margin-right:.5rem;
+    
+        &:hover {
+            background-color: #ff0500;
+            animation: pulsate 1s 
+            ease-in-out;
+        } 
+    }
+
+    &__hodlButton {
+        flex-direction:row;
+        justify-content:flex-end;
+        background-color: #329B24;
+        border: 3px solid #6fd25a;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.15rem;
+        font-size: inherit;
+        cursor: pointer;
+        width:5rem;
+        transition: background-color 0.15s;
+        margin-left:.5rem;
+        margin-right:.5rem;
+    
+        &:hover {
+            background-color: #64fa72;
+            animation: pulsate 1s 
+            ease-in-out;
+        }  
+    }
+
+        &__colorDump {
+            font-weight: 600;
+            color: #ff4f4b;
+            font-size: .7rem;
+
+        }
+
+        &__colorHodl {
+            font-weight: 600;
+            color: #329B24;
+            font-size: .7rem;
+            padding-left: 1rem;
+        }
+
 &__foreGroundContent {
    // background: #131315;
    background-color: #131315;
@@ -190,14 +265,11 @@ p {
 }
 
 .postWithImage {
-   
-
-        height:46rem;
+        height:50rem;
  
 }
 
 .postWithOutImage {
- 
         height:20rem;
    
 }

@@ -26,7 +26,7 @@
     justify-content: center;
     align-items: flex-start;
 
-    &__avatar{
+    &__avatar {
         border-radius:50px;
         margin-right:1rem;
         margin-left:1rem;
@@ -35,7 +35,7 @@
         width:100px;
     }
 
-    &__postWrapper{
+    &__postWrapper {
         position: relative;
         width:100%;
         margin-top:1.3rem;
@@ -46,6 +46,30 @@
         width:66%;
         padding-bottom: 7rem;
         margin-bottom: 7rem;
+    }
+
+    &__followButton {
+        flex-direction:row;
+        justify-content:flex-end;
+        background-color: #232323;
+        border: 3px solid #0d0d0d;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.3rem;
+        font-size: inherit;
+        cursor: pointer;
+        width:8rem;
+        transition: background-color 0.15s;
+        margin-left:1rem;
+        margin-right:1rem;
+        margin-top:1rem;
+        margin-bottom: 2rem;
+    
+        &:hover {
+            background-color: #4e00c2;
+            animation: pulsate 1s 
+            ease-in-out;
+        }  
     }
 }
 
