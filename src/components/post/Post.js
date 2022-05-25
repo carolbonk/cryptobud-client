@@ -215,11 +215,11 @@ export default class Post extends Component {
               </div>
             )}
 
-            <div>
-            <span className={styles.post__colorDump}>{this.props.dumpCounter +
-                " DUMPs "} </span>
-               <span className={styles.post__colorHodl}>{this.props.hodlCounter +
-                " HODLs "}</span> 
+            <div className={styles.post__dumpHodlSection}>
+            <div className={styles.post__colorDump}>{this.props.dumpCounter +
+                " DUMPs "} </div>
+               <div className={styles.post__colorHodl}>{this.props.hodlCounter +
+                " HODLs "}</div> 
             </div>
           </div>
           {!!this.props.hideComments ? (
@@ -413,11 +413,11 @@ export default class Post extends Component {
               </div>
             )}
 
-            <div>
-            <span className={styles.post__colorDump}>{this.props.dumpCounter +
-                " DUMPs "} </span>
-               <span className={styles.post__colorHodl}>{this.props.hodlCounter +
-                " HODLs "}</span> 
+            <div className={styles.post__dumpHodlSection}>
+            <div className={styles.post__colorDump}>{this.props.dumpCounter +
+                " DUMPs "} </div>
+               <div className={styles.post__colorHodl}>{this.props.hodlCounter +
+                " HODLs "}</div> 
             </div>
           </div>
     

@@ -37,7 +37,7 @@ export default class Header extends Component {
             <a href="https://github.com/carolbonk">
               <img
                 className={styles.githublogo}
-                width="80px"
+                width="60px"
                 height="60px"
                 src={githublogo}
               ></img>

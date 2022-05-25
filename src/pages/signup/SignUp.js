@@ -73,9 +73,7 @@ class Signup extends Component {
                     {this.state.success && <div className="signup__message">Signed up!</div>}
                     {this.state.error && <div className="signup__message">{this.state.error}</div>}
                 </form>
-                <p>
-                    Have an account? <Link to="/">Log in</Link>
-                </p>
+               
             </main>
             </>
         );

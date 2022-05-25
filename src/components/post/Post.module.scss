@@ -83,8 +83,23 @@
         margin-right:1rem;
         margin-left:1rem;
         object-fit:contain;
-        width:80%;
-        max-height: 30rem;
+
+
+        @include mobile {
+            width:80%;
+            max-height: 25rem;
+
+        }
+    
+        @include tablet {
+            width:80%;
+            max-height: 30rem;
+        }
+    
+        @include desktop {
+            width:80%;
+            max-height: 30rem;
+        }
     }
 
     &__imgContainer {
@@ -134,6 +149,10 @@
         justify-content: space-between;
         padding-left:1rem;
         padding-right:1rem;
+
+        @include mobile {
+            padding-top: 1rem;
+        }
     }
 
     &__hodlButton {
@@ -209,9 +228,40 @@
             font-weight: 600;
             color: #329B24;
             font-size: .7rem;
-            padding-left: 1rem;
+          
+          
+        
+            @include tablet {
+                padding-left: 1rem;
+
+            }
+        
+            @include desktop {
+                padding-left: 1rem;
+
+            }
         }
 
+        &__dumpHodlSection {
+            display: flex;
+            @include mobile {
+                flex-direction: column;
+
+                button {
+                    margin-top:1rem;
+                }
+    
+            }
+        
+            @include tablet {
+            flex-direction: row;
+            }
+        
+            @include desktop {
+                flex-direction: row;
+            }
+
+        }
 &__foreGroundContent {
    // background: #131315;
    background-color: #131315;
@@ -265,26 +315,47 @@ p {
 }
 
 .postWithImage {
+
+    @include mobile {
+        height:45rem;
+    }
+
+    @include tablet {
         height:50rem;
+    }
+
+    @include desktop {
+        height:50rem;
+    }
  
 }
 
 .postWithOutImage {
-        height:20rem;
+        @include mobile {
+            height:23rem;
+        }
+    
+        @include tablet {
+            height:25rem;
+        }
+    
+        @include desktop {
+            height:20rem;
+        }
    
 }
 
 .postWithChart {
-    @include desktop {
-        height:60rem;
+    @include mobile {
+        height:40rem;
     }
 
     @include tablet {
         height:60rem;
     }
 
-    @include mobile {
-        height:37rem;
+    @include desktop {
+        height:60rem;
     }
 }
 
