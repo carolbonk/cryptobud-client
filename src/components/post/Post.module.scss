@@ -149,6 +149,7 @@
         justify-content: space-between;
         padding-left:1rem;
         padding-right:1rem;
+        padding-top: 1.5rem;
 
         @include mobile {
             padding-top: 1rem;
@@ -340,7 +341,7 @@ p {
         }
     
         @include desktop {
-            height:20rem;
+            height:25rem;
         }
    
 }

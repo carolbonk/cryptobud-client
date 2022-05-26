@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+![Logo](src/assets/images/Logo.svg)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# Cryptobud Client
 
-In the project directory, you can run:
+This is the client application for the cryptobud social media site. It requires to be connected to the cryptobud server application in order to function properly. 
 
-### `npm start`
+## Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Cryptobud client is a single page application that consumes APIs for all of its functionality. Sessions are maintained using JWT tokens sent to the server with each API request. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Functionality
 
-### `npm test`
+Cryptobud includes the following features: 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Users can register to create an account, including data such as an avatar and location information
+* Users can publish posts, either with textual information, and/or with images and/or with charts connected to real-world crypto data
+* Those posts can be public or private. Only followers can see private posts (named "Cluster only" posts in the application)
+* Users can follow other users
+* Users can comment on each other's posts
 
-### `npm run build`
+## Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+All of the source files are in the src folder. 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The react components are divided into two large subgroups/folders within the src folder: pages & components. Pages each have a unique url and hold state - they do not reside inside of other components (they are the top level component). Components in the components folder are used by pages or other components and do not hold state (only props). 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The styles all go in the styles subfolder of the src folder. SaSS partials are in a partial subfolder of the styles folder. There is a partial for holding color variables, fonts and screen sizes for SaaS media queries.
 
-### `npm run eject`
+All static assets go in the assets subfolder of the src files. 
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+App.js mostly just handles routing to the appropriate page based on the given URL. 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Charts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The user can post charts that connect to real world crypto data for a variety of coins. This data comes from the CoinCap API. The project uses the proxy pattern, so to do this, the client application first calls an API on the cryptobud server, which in turns calls the CoinCap API. 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## The Feed
 
-## Learn More
+The homepage for authenticated users displays a "feed" of posts the user has access to. This uses an infinite scroll, such that posts are retrieved from the server as the user scrolls down (10 at a time). Some specific data for the posts is obtained with subsequent API requests, namely data for displaying charts and DUMP/HODL data to display on each post. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Tech Stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Client Side
 
-### Code Splitting
+* REACT
+* JAVASCRIPT
+* SASS
+* AXIOS
+* J PARTICLES
+* REACT INFINITE SCROLL COMPONENT
+* HTML REACT PARSER
+* REACT ROUTER DOM
+* REACT VIS (CHARTS) - FROM UBER
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Server side
 
-### Analyzing the Bundle Size
+* NODE.JS
+* EXPRESS
+* KNEX
+* MYSQL
+* JWT TOKENS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### EXTERNAL APIs
+* COINCAP
