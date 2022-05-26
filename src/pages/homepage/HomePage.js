@@ -545,13 +545,13 @@ export default class HomePage extends Component {
       globalToggle: !currentToggle,
     });
   };
-
+//this.state.posts.length != 0 
   render() {
     return (
       <>
         {!this.state.user ? (
           <UnauthenticatedLanding onLogIn={this.handleLogInSubmit} />
-        ) : this.state.posts.length != 0 ? (
+        ) : (
           <AuthenticatedHomepage
             onDump={this.handleDump}
             onHodl={this.handleHodl}
@@ -578,9 +578,8 @@ export default class HomePage extends Component {
             coins={this.state.coinOptions}
             onLogOut={this.handleLogout}
           />
-        ) : (
-          ""
-        )}
+        ) 
+        }
       </>
     );
   }
