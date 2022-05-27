@@ -14,7 +14,7 @@ export default class Comments extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:8080/users/current", {
+      .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -44,7 +44,7 @@ export default class Comments extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -65,7 +65,7 @@ export default class Comments extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -88,7 +88,7 @@ export default class Comments extends Component {
     };
     var config = {
       method: "post",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -106,7 +106,7 @@ export default class Comments extends Component {
   deleteLike = (id) => {
     var config = {
       method: "delete",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -131,7 +131,7 @@ export default class Comments extends Component {
 
     var config = {
       method: "get",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -159,7 +159,7 @@ export default class Comments extends Component {
     var config = {
       method: "get",
       url:
-        "http://localhost:8080/charts/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
         post.coin +
         "/history?" +
         "interval=" +
@@ -207,7 +207,7 @@ export default class Comments extends Component {
     var config = {
       method: "post",
       url:
-        "http://localhost:8080/posts/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/posts/" +
         this.props.match.params.post_id +
         "/comments",
       headers: {
@@ -236,7 +236,7 @@ export default class Comments extends Component {
       var config = {
         method: "get",
         url:
-          "http://localhost:8080/posts/" +
+          process.env.REACT_APP_REMOTE_SERVER + "/posts/" +
           this.props.match.params.post_id +
           "/comments",
         headers: {

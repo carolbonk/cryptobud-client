@@ -5,6 +5,7 @@ import Post from "../../components/post/Post.js";
 import Header from "../../components/header/Header.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+
 export default class UserProfile extends Component {
   state = {
     user: null,
@@ -28,7 +29,7 @@ export default class UserProfile extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:8080/users/current", {
+      .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -58,7 +59,7 @@ export default class UserProfile extends Component {
   getProfile = () => {
     axios
       .get(
-        "http://localhost:8080/users/id/" + this.props.match.params.user_id,
+        process.env.REACT_APP_REMOTE_SERVER + "/users/id/" + this.props.match.params.user_id,
         {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -81,7 +82,7 @@ export default class UserProfile extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -102,7 +103,7 @@ export default class UserProfile extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -125,7 +126,7 @@ export default class UserProfile extends Component {
     };
     var config = {
       method: "post",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -143,7 +144,7 @@ export default class UserProfile extends Component {
   deleteLike = (id) => {
     var config = {
       method: "delete",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -171,7 +172,7 @@ export default class UserProfile extends Component {
 
     var config = {
       method: "get",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -204,7 +205,7 @@ export default class UserProfile extends Component {
       var config = {
         method: "get",
         url:
-          "http://localhost:8080/posts?from=0&to=10" +
+          process.env.REACT_APP_REMOTE_SERVER + "/posts?from=0&to=10" +
           "&user_id=" +
           this.props.match.params.user_id,
         headers: {
@@ -244,7 +245,7 @@ export default class UserProfile extends Component {
     var config = {
       method: "post",
       url:
-        "http://localhost:8080/users/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/users/" +
         this.props.match.params.user_id +
         "/follow",
       headers: {
@@ -268,7 +269,7 @@ export default class UserProfile extends Component {
     var config = {
       method: "delete",
       url:
-        "http://localhost:8080/users/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/users/" +
         this.props.match.params.user_id +
         "/follow",
       headers: {
@@ -301,7 +302,7 @@ export default class UserProfile extends Component {
       var config = {
         method: "get",
         url:
-          "http://localhost:8080/posts?from=" +
+          process.env.REACT_APP_REMOTE_SERVER + "/posts?from=" +
           from +
           "&to=" +
           10 +
@@ -352,7 +353,7 @@ export default class UserProfile extends Component {
     var config = {
       method: "get",
       url:
-        "http://localhost:8080/charts/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
         post.coin +
         "/history?" +
         "interval=" +

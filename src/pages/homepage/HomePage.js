@@ -92,7 +92,7 @@ export default class HomePage extends Component {
   postMessage = (data, event) => {
     var config = {
       method: "post",
-      url: "http://localhost:8080/posts",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -134,14 +134,14 @@ export default class HomePage extends Component {
     event.preventDefault();
 
     axios
-      .post("http://localhost:8080/users/login", {
+      .post(process.env.REACT_APP_REMOTE_SERVER + "/users/login", {
         email: event.target.email.value,
         password: event.target.password.value,
       })
       .then((response) => {
         sessionStorage.setItem("token", response.data.token);
         axios
-          .get("http://localhost:8080/users/current", {
+          .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
             headers: {
               Authorization: "Bearer " + response.data.token,
             },
@@ -170,7 +170,7 @@ export default class HomePage extends Component {
   componentDidMount() {
     if (!!sessionStorage.getItem("token")) {
       axios
-        .get("http://localhost:8080/users/current", {
+        .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
           },
@@ -213,7 +213,7 @@ export default class HomePage extends Component {
     var config = {
       method: "get",
       url:
-        "http://localhost:8080/charts/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
         post.coin +
         "/history?" +
         "interval=" +
@@ -255,7 +255,7 @@ export default class HomePage extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -276,7 +276,7 @@ export default class HomePage extends Component {
     if (requiresDelete) {
       var config = {
         method: "delete",
-        url: "http://localhost:8080/posts/" + id + "/likes",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -299,7 +299,7 @@ export default class HomePage extends Component {
     };
     var config = {
       method: "post",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -317,7 +317,7 @@ export default class HomePage extends Component {
   deleteLike = (id) => {
     var config = {
       method: "delete",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -345,7 +345,7 @@ export default class HomePage extends Component {
 
     var config = {
       method: "get",
-      url: "http://localhost:8080/posts/" + id + "/likes",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -377,7 +377,7 @@ export default class HomePage extends Component {
     var config = {
       method: "get",
       url:
-        "http://localhost:8080/charts/" +
+        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
         event.target.coin.value +
         "/history?" +
         "interval=" +
@@ -428,7 +428,7 @@ export default class HomePage extends Component {
 
     var config = {
       method: "get",
-      url: "http://localhost:8080/charts/coins",
+      url: process.env.REACT_APP_REMOTE_SERVER + "/charts/coins",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -451,7 +451,7 @@ export default class HomePage extends Component {
 
       var config = {
         method: "get",
-        url: "http://localhost:8080/posts?from=0&to=10",
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts?from=0&to=10",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
@@ -496,7 +496,7 @@ export default class HomePage extends Component {
 
       var config = {
         method: "get",
-        url: "http://localhost:8080/posts?from=" + from + "&to=" + 10,
+        url: process.env.REACT_APP_REMOTE_SERVER + "/posts?from=" + from + "&to=" + 10,
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },

@@ -5,6 +5,7 @@ import axios from "axios";
 import Input from "../../components/input/Input";
 import Header from "../../components/header/Header.js";
 
+
 class Signup extends Component {
     state = {
         error: "",
@@ -24,7 +25,7 @@ class Signup extends Component {
         let trimmedAvatar =  avatar.split(",")[1]; 
        
         axios
-        .post("http://localhost:8080/users/register", {
+        .post(process.env.REACT_APP_REMOTE_SERVER + "/users/register", {
             email: event.target.email.value,
             password: event.target.password.value,
             first_name: event.target.first_name.value,
