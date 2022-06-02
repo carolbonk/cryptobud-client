@@ -51,6 +51,8 @@
             animation: pulsate 1s 
             ease-in-out;
         }  
+    } 
+
     
     .cryptobud {
 
@@ -62,12 +64,12 @@
         @include desktop {
         padding-top: 1rem;
         padding-bottom:1rem;
-        padding-left:3rem;
+        padding-right:0.5rem;
         }
     }
 
     .githublogo {
-        margin-right:1.3rem;
+        margin-right:1.1rem;
         }
-    }
+    
 }
