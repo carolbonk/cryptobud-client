@@ -61,15 +61,21 @@
         padding-bottom:3rem;
         }
 
+        @include tablet {
+        padding-top: 1rem;
+        padding-bottom:1rem;
+        padding-left:2.1rem;
+        }
+
         @include desktop {
         padding-top: 1rem;
         padding-bottom:1rem;
-        padding-right:0.5rem;
+        padding-left:3.5rem;
         }
     }
 
     .githublogo {
-        margin-right:1.1rem;
+        margin-right:3.5rem;
         }
     
 }
