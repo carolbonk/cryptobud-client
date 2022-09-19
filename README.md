@@ -1,5 +1,5 @@
 ![Logo](src/assets/images/Logo.svg)
-
+Checkout my YouTube video this project here: https://www.youtube.com/watch?v=Ndd44XDcJlw&t=145s
 
 # Cryptobud Client
 
