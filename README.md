@@ -1,5 +1,5 @@
 ![Logo](src/assets/images/Logo.svg)
-Checkout my YouTube video this project here: https://www.youtube.com/watch?v=Ndd44XDcJlw&t=145s
+
 
 # Cryptobud Client
 
@@ -7,7 +7,7 @@ This is the client application for the cryptobud social media site. It requires 
 
 ## Architecture
 
-Cryptobud client is a single page application that consumes APIs for all of its functionality. Sessions are maintained using JWT tokens sent to the server with each API request. 
+Cryptobud client is a single page application that consumes APIs for all of its functionality. Sessions are maintained using JWT tokens sent to the server with each API request. Checkout my YouTube video this project here: https://www.youtube.com/watch?v=Ndd44XDcJlw&t=145s
 
 ## Functionality
 
