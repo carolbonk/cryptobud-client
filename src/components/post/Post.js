@@ -178,7 +178,7 @@ export default class Post extends Component {
                   Hodl
                 </button>{" "}
               </div>
-            ) : this.props.userLikeType == "hodl" ? (
+            ) : this.props.userLikeType === "hodl" ? (
               <div>
                 <button className={styles.post__dumpButton}
                   onClick={() => {
@@ -376,7 +376,7 @@ export default class Post extends Component {
                   Hodl
                 </button>{" "}
               </div>
-            ) : this.props.userLikeType == "hodl" ? (
+            ) : this.props.userLikeType === "hodl" ? (
               <div>
                 <button className={styles.post__dumpButton}
                   onClick={() => {
