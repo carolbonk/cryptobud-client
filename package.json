@@ -14,7 +14,7 @@
     "react-dom": "^18.1.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^5.3.1",
-    "react-scripts": "^0.0.0",
+    "react-scripts": "5.0.1",
     "react-tradingview-embed": "^3.0.6",
     "react-vis": "^1.11.7",
     "sass": "^1.51.0",
@@ -46,8 +46,8 @@
     ]
   },
   "engines": {
-    "npm": "8.5.0",
-    "node": "16.14.2"
+    "npm": "10.x",
+    "node": "24.x"
   },
   "overrides": {
     "@babel/traverse": "^7.23.2",
