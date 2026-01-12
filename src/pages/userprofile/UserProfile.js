@@ -444,6 +444,7 @@ export default class UserProfile extends Component {
                 <img
                   className={styles.homePage__avatar}
                   src={this.state.currentProfile.avatar_url}
+                  alt={`${this.state.currentProfile.first_name} ${this.state.currentProfile.last_name}'s avatar`}
                 ></img>
                 <h1>
                   {this.state.currentProfile.first_name +
@@ -457,7 +458,7 @@ export default class UserProfile extends Component {
                     this.state.currentProfile.country}
                 </p>
                 <div>
-                  {this.state.currentProfile.id != this.state.user.id ? (
+                  {this.state.currentProfile.id !== this.state.user.id ? (
                     this.state.currentProfile.isFriend ? (
                       <button className={styles.homePage__followButton} onClick={this.handleUnfollow}>Unfollow</button>
                     ) : (
