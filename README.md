@@ -3,7 +3,8 @@
 
 # Cryptobud Client
 
-This is the client application for the cryptobud social media site. It requires to be connected to the cryptobud server application in order to function properly. 
+This is the client application for the cryptobud social media site. It requires to be connected to the cryptobud server application in order to function properly.
+The goal was to create a robust and dynamic social media platform that meets user needs while offering a modern, user-friendly experience tailored to the cryptocurrency community, you can check more about the project here:(https://www.carolbonk.com/Work/CryptoProject)
 
 ## Architecture
 
