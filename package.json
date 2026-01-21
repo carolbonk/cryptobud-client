@@ -14,7 +14,7 @@
     "react-dom": "^18.1.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^5.3.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-tradingview-embed": "^3.0.6",
     "react-vis": "^1.11.7",
     "sass": "^1.51.0",
@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

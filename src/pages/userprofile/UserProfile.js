@@ -167,7 +167,7 @@ export default class UserProfile extends Component {
   getLikesDataForPost = (id) => {
     let posts = this.state.posts;
     let post = posts.find((post) => {
-      return post.id == id;
+      return post.id === id;
     });
 
     var config = {
@@ -347,7 +347,7 @@ export default class UserProfile extends Component {
   getChartDataForPost = (id) => {
     let posts = this.state.posts;
     let post = posts.find((post) => {
-      return post.id == id;
+      return post.id === id;
     });
 
     var config = {

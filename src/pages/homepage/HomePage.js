@@ -3,6 +3,9 @@ import axios from "axios";
 import { Particle } from "jparticles";
 import UnauthenticatedLanding from "../../components/unauthenticatedLanding/UnauthenticatedLanding";
 import AuthenticatedHomepage from "../../components/authenticatedHomepage/AuthenticatedHomepage";
+import { getAxiosConfig, setToken, removeToken, getToken, isAuthenticated } from "../../utils/authUtils";
+import { formatChartData } from "../../utils/chartUtils";
+import { encodeImageToBase64 } from "../../utils/imageUtils";
 
 export default class HomePage extends Component {
   state = {
@@ -35,23 +38,18 @@ export default class HomePage extends Component {
     });
   };
 
-  handlePostMessageSubmit = (event) => {
+  handlePostMessageSubmit = async (event) => {
     event.preventDefault();
-    let name = event.target.getAttribute("name");
 
     if (this.state.preview) {
       this.getChartData(event);
     } else {
       let data = null;
-      let fileName = event.target.image.value;
+      const fileName = event.target.image.value;
+
       if (!!fileName) {
-        let imageType = fileName.split(".")[1];
-        const fileReader = new FileReader();
-
-        fileReader.addEventListener("load", () => {
-          let image = fileReader.result;
-
-          let trimmedImage = image.split(",")[1];
+        try {
+          const { trimmedImage, imageType } = await encodeImageToBase64(event.target.image.files[0]);
 
           data = {
             message: event.target.message.value,
@@ -68,9 +66,9 @@ export default class HomePage extends Component {
           };
 
           this.postMessage(data, event);
-        });
-
-        fileReader.readAsDataURL(event.target.image.files[0]);
+        } catch (error) {
+          console.error("Error encoding image:", error);
+        }
       } else {
         data = {
           message: event.target.message.value,
@@ -90,16 +88,7 @@ export default class HomePage extends Component {
   };
 
   postMessage = (data, event) => {
-    var config = {
-      method: "post",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-      data: data,
-    };
-
-    axios(config)
+    axios(getAxiosConfig('post', '/posts', data))
       .then((response) => {
         event.target.message.value = "";
         event.target.image.value = "";
@@ -116,8 +105,8 @@ export default class HomePage extends Component {
           this.refreshPosts
         );
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.error("Error posting message:", error);
       });
   };
 
