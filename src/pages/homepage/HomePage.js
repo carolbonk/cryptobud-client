@@ -111,7 +111,7 @@ export default class HomePage extends Component {
   };
 
   handleLogout = () => {
-    sessionStorage.removeItem("token");
+    removeToken();
     this.setState({
       user: null,
       posts: [],
@@ -122,48 +122,37 @@ export default class HomePage extends Component {
   handleLogInSubmit = (event) => {
     event.preventDefault();
 
-    axios
-      .post(process.env.REACT_APP_REMOTE_SERVER + "/users/login", {
-        email: event.target.email.value,
-        password: event.target.password.value,
+    const loginData = {
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+
+    axios(getAxiosConfig('post', '/users/login', loginData))
+      .then((response) => {
+        setToken(response.data.token);
+        return axios(getAxiosConfig('get', '/users/current'));
       })
       .then((response) => {
-        sessionStorage.setItem("token", response.data.token);
-        axios
-          .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
-            headers: {
-              Authorization: "Bearer " + response.data.token,
-            },
-          })
-          .then((response) => {
-            this.setState(
-              {
-                user: response.data,
-              },
-              () => {
-                this.getPosts();
-              }
-            );
-          })
-          .catch(() => {
-            this.setState({
-              failedAuth: true,
-            });
-          });
+        this.setState(
+          {
+            user: response.data,
+          },
+          () => {
+            this.getPosts();
+          }
+        );
       })
       .catch((error) => {
-        this.setState({ error: error.response.data });
+        this.setState({
+          failedAuth: true,
+          error: error.response?.data
+        });
       });
   };
 
   componentDidMount() {
-    if (!!sessionStorage.getItem("token")) {
-      axios
-        .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
-          headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-          },
-        })
+    if (isAuthenticated()) {
+      axios(getAxiosConfig('get', '/users/current'))
         .then((response) => {
           this.setState(
             {
@@ -194,67 +183,30 @@ export default class HomePage extends Component {
   }
 
   getChartDataForPost = (id) => {
-    let posts = this.state.posts;
-    let post = posts.find((post) => {
-      return post.id === id;
-    });
+    const posts = this.state.posts;
+    const post = posts.find((post) => post.id === id);
 
-    var config = {
-      method: "get",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
-        post.coin +
-        "/history?" +
-        "interval=" +
-        "d1" +
-        "&start=" +
-        new Date(post.start_date).getTime() +
-        "&end=" +
-        new Date(post.end_date).getTime(),
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+    const endpoint = `/charts/${post.coin}/history?interval=d1&start=${new Date(post.start_date).getTime()}&end=${new Date(post.end_date).getTime()}`;
+
+    axios(getAxiosConfig('get', endpoint))
       .then((response) => {
-        let chartData = response.data.map((dataPoint) => {
-          let date = new Date(dataPoint.date);
-          let chartPoint = {
-            x:
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getDate() +
-              "/" +
-              date.getFullYear(),
-            y: dataPoint.priceUsd,
-          };
-          return chartPoint;
-        });
-
+        const chartData = formatChartData(response.data);
         post.chartData = chartData;
         this.setState({ posts: posts });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error fetching chart data for post ${id}:`, error);
       });
   };
 
   handleDump = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "dump");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "dump");
@@ -263,19 +215,12 @@ export default class HomePage extends Component {
 
   handleHodl = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "hodl");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "hodl");
@@ -283,63 +228,38 @@ export default class HomePage extends Component {
   };
 
   addLike = (id, type) => {
-    let data = {
-      type: type,
-    };
-    var config = {
-      method: "post",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-      data: data,
-    };
-    axios(config)
-      .then((response) => {
+    const data = { type };
+    axios(getAxiosConfig('post', `/posts/${id}/likes`, data))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error adding ${type} to post ${id}:`, error);
       });
   };
 
   deleteLike = (id) => {
-    var config = {
-      method: "delete",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
-      .then((response) => {
+    axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error deleting like from post ${id}:`, error);
       });
   };
 
   handleUnDump = (id) => {
     this.deleteLike(id);
   };
+
   handleUnHodl = (id) => {
     this.deleteLike(id);
   };
   getLikesDataForPost = (id) => {
-    let posts = this.state.posts;
-    let post = posts.find((post) => {
-      return post.id === id;
-    });
+    const posts = this.state.posts;
+    const post = posts.find((post) => post.id === id);
 
-    var config = {
-      method: "get",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+    axios(getAxiosConfig('get', `/posts/${id}/likes`))
       .then((response) => {
         post.hodlCounter = response.data.hodlCounter;
         post.dumpCounter = response.data.dumpCounter;
@@ -352,54 +272,26 @@ export default class HomePage extends Component {
           }
         });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error fetching likes for post ${id}:`, error);
       });
   };
 
   getChartData = (event) => {
-    if (!sessionStorage.getItem("token")) {
+    if (!isAuthenticated()) {
       this.setState({ failedAuth: true });
       return;
     }
 
-    var config = {
-      method: "get",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
-        event.target.coin.value +
-        "/history?" +
-        "interval=" +
-        "d1" +
-        "&start=" +
-        new Date(event.target.start_date.value).getTime() +
-        "&end=" +
-        new Date(event.target.end_date.value).getTime(),
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
-      .then((response) => {
-        let chartData = response.data.map((dataPoint) => {
-          let date = new Date(dataPoint.date);
-          let chartPoint = {
-            x:
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getDate() +
-              "/" +
-              date.getFullYear(),
-            y: dataPoint.priceUsd,
-          };
-          return chartPoint;
-        });
+    const endpoint = `/charts/${event.target.coin.value}/history?interval=d1&start=${new Date(event.target.start_date.value).getTime()}&end=${new Date(event.target.end_date.value).getTime()}`;
 
+    axios(getAxiosConfig('get', endpoint))
+      .then((response) => {
+        const chartData = formatChartData(response.data);
         this.setState({ chartData: chartData, preview: false });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error("Error fetching chart data:", error);
       });
   };
 
@@ -410,98 +302,73 @@ export default class HomePage extends Component {
   };
 
   getCoins = () => {
-    if (!sessionStorage.getItem("token")) {
+    if (!isAuthenticated()) {
       this.setState({ failedAuth: true });
       return;
     }
 
-    var config = {
-      method: "get",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/charts/coins",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+    axios(getAxiosConfig('get', '/charts/coins'))
       .then((response) => {
         this.setState({ coinOptions: response.data });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error("Error fetching coins:", error);
       });
   };
 
   refreshPosts = () => {
     if (!!this.state.user) {
-      if (!sessionStorage.getItem("token")) {
+      if (!isAuthenticated()) {
         this.setState({ failedAuth: true });
         return;
       }
 
-      var config = {
-        method: "get",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts?from=0&to=10",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config).then((response) => {
-        let currentPosts = this.state.posts;
+      axios(getAxiosConfig('get', '/posts?from=0&to=10'))
+        .then((response) => {
+          const currentPosts = this.state.posts;
+          const incomingPosts = response.data.posts;
 
-        let incomingPosts = response.data.posts;
-
-        let postsToAdd = incomingPosts.filter((incomingPost) => {
-          return !currentPosts.find((currentPost) => {
-            return currentPost.id === incomingPost.id;
+          const postsToAdd = incomingPosts.filter((incomingPost) => {
+            return !currentPosts.find((currentPost) => currentPost.id === incomingPost.id);
           });
+
+          const posts = postsToAdd.concat(currentPosts);
+
+          this.setState(
+            {
+              lastTopIndex: this.state.lastTopIndex + postsToAdd.length,
+              posts: posts,
+            },
+            () => {
+              postsToAdd.forEach((post) => {
+                this.getLikesDataForPost(post.id);
+              });
+            }
+          );
+        })
+        .catch((error) => {
+          console.error("Error refreshing posts:", error);
         });
-
-        let posts = postsToAdd.concat(currentPosts);
-
-        this.setState(
-          {
-            lastTopIndex: this.state.lastTopIndex + postsToAdd.length,
-            posts: posts,
-          },
-          () => {
-            postsToAdd.forEach((post) => {
-              this.getLikesDataForPost(post.id);
-            });
-          }
-        );
-      });
     }
   };
 
   getPosts = () => {
     if (!!this.state.user) {
-      if (!sessionStorage.getItem("token")) {
+      if (!isAuthenticated()) {
         this.setState({ failedAuth: true });
         return;
       }
 
-      let from = this.state.lastTopIndex;
-      let to = from + 10;
+      const from = this.state.lastTopIndex;
+      const to = from + 10;
 
-      var config = {
-        method: "get",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts?from=" + from + "&to=" + 10,
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-
-      axios(config)
+      axios(getAxiosConfig('get', `/posts?from=${from}&to=10`))
         .then((response) => {
-          let currentPosts = this.state.posts;
+          const currentPosts = this.state.posts;
+          const newPosts = currentPosts.concat(response.data.posts);
 
-          let newPosts = currentPosts.concat(response.data.posts);
-
-          let morePosts = true;
-          if (newPosts.length < currentPosts.length + 10) {
-            morePosts = false;
-          }
-          let nextLastTopIndex = to + 1;
+          const morePosts = newPosts.length >= currentPosts.length + 10;
+          const nextLastTopIndex = to + 1;
 
           this.setState(
             {
@@ -516,8 +383,8 @@ export default class HomePage extends Component {
             }
           );
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch((error) => {
+          console.error("Error fetching posts:", error);
         });
     }
   };

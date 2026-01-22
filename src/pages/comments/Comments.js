@@ -4,6 +4,8 @@ import axios from "axios";
 import Post from "../../components/post/Post.js";
 import Comment from "../../components/comment/Comment.js";
 import Header from "../../components/header/Header.js";
+import { getAxiosConfig, removeToken, isAuthenticated } from "../../utils/authUtils";
+import { formatChartData } from "../../utils/chartUtils";
 
 export default class Comments extends Component {
   state = {
@@ -13,12 +15,7 @@ export default class Comments extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      })
+    axios(getAxiosConfig('get', '/users/current'))
       .then((response) => {
         this.setState(
           {
@@ -28,12 +25,15 @@ export default class Comments extends Component {
             this.getComments();
           }
         );
+      })
+      .catch((error) => {
+        console.error("Error fetching current user:", error);
       });
     setInterval(this.getComments, 5000);
   }
 
   handleLogout = () => {
-    sessionStorage.removeItem("token");
+    removeToken();
     this.setState({
       user: null,
       posts: [],
@@ -42,19 +42,12 @@ export default class Comments extends Component {
   };
   handleDump = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "dump");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "dump");
@@ -63,19 +56,12 @@ export default class Comments extends Component {
 
   handleHodl = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "hodl");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "hodl");
@@ -83,60 +69,38 @@ export default class Comments extends Component {
   };
 
   addLike = (id, type) => {
-    let data = {
-      type: type,
-    };
-    var config = {
-      method: "post",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-      data: data,
-    };
-    axios(config)
-      .then((response) => {
+    const data = { type };
+    axios(getAxiosConfig('post', `/posts/${id}/likes`, data))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error adding ${type} to post ${id}:`, error);
       });
   };
 
   deleteLike = (id) => {
-    var config = {
-      method: "delete",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
-      .then((response) => {
+    axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error deleting like from post ${id}:`, error);
       });
   };
 
   handleUnDump = (id) => {
     this.deleteLike(id);
   };
+
   handleUnHodl = (id) => {
     this.deleteLike(id);
   };
-  getLikesDataForPost = (id) => {
-    let post = this.state.post;
 
-    var config = {
-      method: "get",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+  getLikesDataForPost = (id) => {
+    const post = this.state.post;
+
+    axios(getAxiosConfig('get', `/posts/${id}/likes`))
       .then((response) => {
         post.hodlCounter = response.data.hodlCounter;
         post.dumpCounter = response.data.dumpCounter;
@@ -149,106 +113,54 @@ export default class Comments extends Component {
           }
         });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error fetching likes for post ${id}:`, error);
       });
   };
-  getChartDataForPost = (id) => {
-    let post = this.state.post;
+  getChartDataForPost = () => {
+    const post = this.state.post;
+    const endpoint = `/charts/${post.coin}/history?interval=d1&start=${new Date(post.start_date).getTime()}&end=${new Date(post.end_date).getTime()}`;
 
-    var config = {
-      method: "get",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
-        post.coin +
-        "/history?" +
-        "interval=" +
-        "d1" +
-        "&start=" +
-        new Date(post.start_date).getTime() +
-        "&end=" +
-        new Date(post.end_date).getTime(),
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+    axios(getAxiosConfig('get', endpoint))
       .then((response) => {
-        let chartData = response.data.map((dataPoint) => {
-          let date = new Date(dataPoint.date);
-          let chartPoint = {
-            x:
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getDate() +
-              "/" +
-              date.getFullYear(),
-            y: dataPoint.priceUsd,
-          };
-          return chartPoint;
-        });
-
+        const chartData = formatChartData(response.data);
         post.chartData = chartData;
         this.setState({ post: post });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error("Error fetching chart data:", error);
       });
   };
 
   handlePostComment = (event) => {
     event.preventDefault();
 
-    let newComment = {
+    const newComment = {
       message: event.target.message.value,
     };
 
-    var config = {
-      method: "post",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/posts/" +
-        this.props.match.params.post_id +
-        "/comments",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-      data: newComment,
-    };
-
-    axios(config)
-      .then((response) => {
+    axios(getAxiosConfig('post', `/posts/${this.props.match.params.post_id}/comments`, newComment))
+      .then(() => {
         this.getComments();
         event.target.message.value = "";
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.error("Error posting comment:", error);
       });
   };
 
   getComments = () => {
     if (!!this.state.user) {
-      if (!sessionStorage.getItem("token")) {
+      if (!isAuthenticated()) {
         this.setState({ failedAuth: true });
         return;
       }
 
-      var config = {
-        method: "get",
-        url:
-          process.env.REACT_APP_REMOTE_SERVER + "/posts/" +
-          this.props.match.params.post_id +
-          "/comments",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-
-      axios(config)
+      axios(getAxiosConfig('get', `/posts/${this.props.match.params.post_id}/comments`))
         .then((response) => {
-          let firstComment = response.data.posts[0];
+          const firstComment = response.data.posts[0];
           if (!this.state.post) {
-            let post = {
+            const post = {
               id: firstComment.postId,
               message: firstComment.postMessage,
               first_name: firstComment.postFirstName,
@@ -278,8 +190,8 @@ export default class Comments extends Component {
             });
           }
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch((error) => {
+          console.error("Error fetching comments:", error);
         });
     }
   };

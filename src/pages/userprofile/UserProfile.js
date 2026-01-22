@@ -4,6 +4,8 @@ import axios from "axios";
 import Post from "../../components/post/Post.js";
 import Header from "../../components/header/Header.js";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { getAxiosConfig, removeToken, isAuthenticated } from "../../utils/authUtils";
+import { formatChartData } from "../../utils/chartUtils";
 
 
 export default class UserProfile extends Component {
@@ -19,7 +21,7 @@ export default class UserProfile extends Component {
   };
 
   handleLogout = () => {
-    sessionStorage.removeItem("token");
+    removeToken();
     this.setState({
       user: null,
       posts: [],
@@ -28,12 +30,7 @@ export default class UserProfile extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get(process.env.REACT_APP_REMOTE_SERVER + "/users/current", {
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      })
+    axios(getAxiosConfig('get', '/users/current'))
       .then((response) => {
         this.setState(
           {
@@ -51,21 +48,11 @@ export default class UserProfile extends Component {
         });
       });
 
-    //this.getPosts();
-
     setInterval(this.refreshPosts, 5000);
   }
 
   getProfile = () => {
-    axios
-      .get(
-        process.env.REACT_APP_REMOTE_SERVER + "/users/id/" + this.props.match.params.user_id,
-        {
-          headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-          },
-        }
-      )
+    axios(getAxiosConfig('get', `/users/id/${this.props.match.params.user_id}`))
       .then((response) => {
         this.setState({
           currentProfile: response.data,
@@ -80,19 +67,12 @@ export default class UserProfile extends Component {
 
   handleDump = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "dump");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "dump");
@@ -101,19 +81,12 @@ export default class UserProfile extends Component {
 
   handleHodl = (id, requiresDelete) => {
     if (requiresDelete) {
-      var config = {
-        method: "delete",
-        url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config)
-        .then((response) => {
+      axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+        .then(() => {
           this.addLike(id, "hodl");
         })
-        .catch(() => {
-          console.log("error");
+        .catch((error) => {
+          console.error(`Error deleting like for post ${id}:`, error);
         });
     } else {
       this.addLike(id, "hodl");
@@ -121,63 +94,39 @@ export default class UserProfile extends Component {
   };
 
   addLike = (id, type) => {
-    let data = {
-      type: type,
-    };
-    var config = {
-      method: "post",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-      data: data,
-    };
-    axios(config)
-      .then((response) => {
+    const data = { type };
+    axios(getAxiosConfig('post', `/posts/${id}/likes`, data))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error adding ${type} to post ${id}:`, error);
       });
   };
 
   deleteLike = (id) => {
-    var config = {
-      method: "delete",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
-      .then((response) => {
+    axios(getAxiosConfig('delete', `/posts/${id}/likes`))
+      .then(() => {
         this.getLikesDataForPost(id);
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error deleting like from post ${id}:`, error);
       });
   };
 
   handleUnDump = (id) => {
     this.deleteLike(id);
   };
+
   handleUnHodl = (id) => {
     this.deleteLike(id);
   };
-  getLikesDataForPost = (id) => {
-    let posts = this.state.posts;
-    let post = posts.find((post) => {
-      return post.id === id;
-    });
 
-    var config = {
-      method: "get",
-      url: process.env.REACT_APP_REMOTE_SERVER + "/posts/" + id + "/likes",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+  getLikesDataForPost = (id) => {
+    const posts = this.state.posts;
+    const post = posts.find((post) => post.id === id);
+
+    axios(getAxiosConfig('get', `/posts/${id}/likes`))
       .then((response) => {
         post.hodlCounter = response.data.hodlCounter;
         post.dumpCounter = response.data.dumpCounter;
@@ -190,140 +139,101 @@ export default class UserProfile extends Component {
           }
         });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error fetching likes for post ${id}:`, error);
       });
   };
 
   refreshPosts = () => {
     if (!!this.state.user) {
-      if (!sessionStorage.getItem("token")) {
+      if (!isAuthenticated()) {
         this.setState({ failedAuth: true });
         return;
       }
 
-      var config = {
-        method: "get",
-        url:
-          process.env.REACT_APP_REMOTE_SERVER + "/posts?from=0&to=10" +
-          "&user_id=" +
-          this.props.match.params.user_id,
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-      axios(config).then((response) => {
-        let currentPosts = this.state.posts;
+      const endpoint = `/posts?from=0&to=10&user_id=${this.props.match.params.user_id}`;
 
-        let incomingPosts = response.data.posts;
+      axios(getAxiosConfig('get', endpoint))
+        .then((response) => {
+          const currentPosts = this.state.posts;
+          const incomingPosts = response.data.posts;
 
-        let postsToAdd = incomingPosts.filter((incomingPost) => {
-          return !currentPosts.find((currentPost) => {
-            return currentPost.id === incomingPost.id;
+          const postsToAdd = incomingPosts.filter((incomingPost) => {
+            return !currentPosts.find((currentPost) => currentPost.id === incomingPost.id);
           });
+
+          const posts = postsToAdd.concat(currentPosts);
+
+          this.setState(
+            {
+              lastTopIndex: this.state.lastTopIndex + postsToAdd.length,
+              posts: posts,
+            },
+            () => {
+              response.data.posts.forEach((post) => {
+                this.getLikesDataForPost(post.id);
+              });
+            }
+          );
+        })
+        .catch((error) => {
+          console.error("Error refreshing posts:", error);
         });
-
-        let posts = postsToAdd.concat(currentPosts);
-
-        this.setState(
-          {
-            lastTopIndex: this.state.lastTopIndex + postsToAdd.length,
-            posts: posts,
-          },
-
-          () => {
-            response.data.posts.forEach((post) => {
-              this.getLikesDataForPost(post.id);
-            });
-          }
-        );
-      });
     }
   };
 
   handleFollow = () => {
-    var config = {
-      method: "post",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/users/" +
-        this.props.match.params.user_id +
-        "/follow",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-
-    axios(config).then((response) => {
-      this.getProfile();
-      this.setState(
-        {
-          posts: [],
-          lastTopIndex: 0,
-        },
-        this.getPosts
-      );
-    });
+    axios(getAxiosConfig('post', `/users/${this.props.match.params.user_id}/follow`))
+      .then(() => {
+        this.getProfile();
+        this.setState(
+          {
+            posts: [],
+            lastTopIndex: 0,
+          },
+          this.getPosts
+        );
+      })
+      .catch((error) => {
+        console.error("Error following user:", error);
+      });
   };
 
   handleUnfollow = () => {
-    var config = {
-      method: "delete",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/users/" +
-        this.props.match.params.user_id +
-        "/follow",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-
-    axios(config).then((response) => {
-      this.getProfile();
-      this.setState(
-        {
-          posts: [],
-          lastTopIndex: 0,
-        },
-        this.getPosts
-      );
-    });
+    axios(getAxiosConfig('delete', `/users/${this.props.match.params.user_id}/follow`))
+      .then(() => {
+        this.getProfile();
+        this.setState(
+          {
+            posts: [],
+            lastTopIndex: 0,
+          },
+          this.getPosts
+        );
+      })
+      .catch((error) => {
+        console.error("Error unfollowing user:", error);
+      });
   };
 
   getPosts = () => {
     if (!!this.state.user) {
-      if (!sessionStorage.getItem("token")) {
+      if (!isAuthenticated()) {
         this.setState({ failedAuth: true });
         return;
       }
 
-      let from = this.state.lastTopIndex;
-      let to = from + 10;
+      const from = this.state.lastTopIndex;
+      const to = from + 10;
+      const endpoint = `/posts?from=${from}&to=10&user_id=${this.props.match.params.user_id}`;
 
-      var config = {
-        method: "get",
-        url:
-          process.env.REACT_APP_REMOTE_SERVER + "/posts?from=" +
-          from +
-          "&to=" +
-          10 +
-          "&user_id=" +
-          this.props.match.params.user_id,
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      };
-
-      axios(config)
+      axios(getAxiosConfig('get', endpoint))
         .then((response) => {
-          let currentPosts = this.state.posts;
+          const currentPosts = this.state.posts;
+          const newPosts = currentPosts.concat(response.data.posts);
 
-          let newPosts = currentPosts.concat(response.data.posts);
-
-          let morePosts = true;
-          if (newPosts.length < currentPosts.length + 10) {
-            morePosts = false;
-          }
-          let nextLastTopIndex = to + 1;
+          const morePosts = newPosts.length >= currentPosts.length + 10;
+          const nextLastTopIndex = to + 1;
 
           this.setState(
             {
@@ -338,56 +248,26 @@ export default class UserProfile extends Component {
             }
           );
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch((error) => {
+          console.error("Error fetching posts:", error);
         });
     }
   };
 
   getChartDataForPost = (id) => {
-    let posts = this.state.posts;
-    let post = posts.find((post) => {
-      return post.id === id;
-    });
+    const posts = this.state.posts;
+    const post = posts.find((post) => post.id === id);
 
-    var config = {
-      method: "get",
-      url:
-        process.env.REACT_APP_REMOTE_SERVER + "/charts/" +
-        post.coin +
-        "/history?" +
-        "interval=" +
-        "d1" +
-        "&start=" +
-        new Date(post.start_date).getTime() +
-        "&end=" +
-        new Date(post.end_date).getTime(),
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    };
-    axios(config)
+    const endpoint = `/charts/${post.coin}/history?interval=d1&start=${new Date(post.start_date).getTime()}&end=${new Date(post.end_date).getTime()}`;
+
+    axios(getAxiosConfig('get', endpoint))
       .then((response) => {
-        let chartData = response.data.map((dataPoint) => {
-          let date = new Date(dataPoint.date);
-          let chartPoint = {
-            x:
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getDate() +
-              "/" +
-              date.getFullYear(),
-            y: dataPoint.priceUsd,
-          };
-          return chartPoint;
-        });
-
+        const chartData = formatChartData(response.data);
         post.chartData = chartData;
         this.setState({ posts: posts });
       })
-      .catch(() => {
-        console.log("error");
+      .catch((error) => {
+        console.error(`Error fetching chart data for post ${id}:`, error);
       });
   };
 
