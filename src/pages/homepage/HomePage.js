@@ -3,7 +3,7 @@ import axios from "axios";
 import { Particle } from "jparticles";
 import UnauthenticatedLanding from "../../components/unauthenticatedLanding/UnauthenticatedLanding";
 import AuthenticatedHomepage from "../../components/authenticatedHomepage/AuthenticatedHomepage";
-import { getAxiosConfig, setToken, removeToken, getToken, isAuthenticated } from "../../utils/authUtils";
+import { getAxiosConfig, setToken, removeToken, isAuthenticated } from "../../utils/authUtils";
 import { formatChartData } from "../../utils/chartUtils";
 import { encodeImageToBase64 } from "../../utils/imageUtils";
 

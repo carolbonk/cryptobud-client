@@ -25,7 +25,8 @@ export default class NewPost extends Component {
           <img
             className={styles.newPost__avatar}
             src={this.props.userAvatar}
-          ></img>
+            alt={`${this.props.userFirstName}'s avatar`}
+          />
           <p>Hey {this.props.userFirstName}, What's up?</p>
         </div>
         <form
@@ -120,9 +121,9 @@ export default class NewPost extends Component {
             <div className={styles.newPost__toggleContainer}>
               <div className={styles.newPost__toggleBar}>
                 <p className={styles.newPost__globalText}>GLOBAL</p>
-                <a
+                <button
+                  type="button"
                   onClick={this.props.onGlobalToggleChange}
-                  href="#"
                   className={
                     styles.newPost__toggle +
                     " " +
@@ -130,7 +131,7 @@ export default class NewPost extends Component {
                       ? styles.newPost__toggleGlobal
                       : styles.newPost__toggleCluster)
                   }
-                ></a>
+                ></button>
                 <p className={styles.newPost__clusterText}>CLUSTER ONLY</p>
               </div>
             </div>

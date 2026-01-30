@@ -44,7 +44,8 @@ export default class Post extends Component {
               <img
                 className={styles.post__avatar}
                 src={this.props.avatar}
-              ></img>
+                alt={`${this.props.firstName} ${this.props.lastName}'s avatar`}
+              />
               <Link
                 className={styles.post__userLink}
                 to={"/user/" + this.props.userId}
@@ -62,7 +63,7 @@ export default class Post extends Component {
 
           <div className={styles.post__imgContainer}>
             {!!this.props.imageUrl ? (
-              <img src={this.props.imageUrl} className={styles.post__image} />
+              <img src={this.props.imageUrl} className={styles.post__image} alt="Post content" />
             ) : (
               ""
             )}
@@ -239,7 +240,8 @@ export default class Post extends Component {
               <img
                 className={styles.post__avatar}
                 src={this.props.avatar}
-              ></img>
+                alt={`${this.props.firstName} ${this.props.lastName}'s avatar`}
+              />
               <Link
                 className={styles.post__userLink}
                 to={"/user/" + this.props.userId}
@@ -259,7 +261,7 @@ export default class Post extends Component {
           </div>
           <div className={styles.post__imgContainer}>
             {!!this.props.imageUrl ? (
-              <img src={this.props.imageUrl} className={styles.post__image} />
+              <img src={this.props.imageUrl} className={styles.post__image} alt="Post content" />
             ) : (
               ""
             )}

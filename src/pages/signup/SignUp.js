@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import styles from './SignUp.module.scss';
 import axios from "axios";
 import Input from "../../components/input/Input";
